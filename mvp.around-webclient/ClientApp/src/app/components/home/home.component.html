@@ -1,15 +1,7 @@
-<p>home works!</p>
-<ng-container *ngIf="(loggedIn$ | async) === false">
-    <p>Sign In:</p>
-    <button (click)="loginPopup()">Popup login</button>
-</ng-container>
-<ng-container *ngIf="(loggedIn$ | async) === true">
-    <p>You are logged in as:</p>
-    <!-- <p><strong>{{(identity$ | async).profile.name}}</strong> <br /> {{(identity$ | async).profile.sid}}</p> -->
-    <ul>
-        <li *ngFor="let key of objectKeys((identity$ | async).profile)">{{key}}</li>
-      </ul>
-    <button (click)="logoutPopup()">Popup logout</button>
-</ng-container>
 
-<div id="map" style="width:500px; height:400px"></div>
+<div id="primary-header" class="mat-h1">
+  <span>Home</span>
+</div>
+<div id="content" fxLayout fxLayoutAlign="center">
+  <div id="map" style="width:500px; height:400px"></div>
+</div>

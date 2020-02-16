@@ -10,12 +10,10 @@ import * as fromUser from './user/user.reducer';
 
 
 export interface State {
-
   [fromUser.usersFeatureKey]: fromUser.State;
 }
 
 export const reducers: ActionReducerMap<State> = {
-
   [fromUser.usersFeatureKey]: fromUser.reducer,
 };
 

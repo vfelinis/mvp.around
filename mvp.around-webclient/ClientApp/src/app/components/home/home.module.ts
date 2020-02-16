@@ -6,7 +6,6 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import * as from from './reducers';
 
-
 @NgModule({
   declarations: [HomeComponent],
   imports: [
