@@ -1,0 +1,29 @@
+<h3 mat-dialog-title>
+    New Group
+</h3>
+<mat-dialog-content>
+  <div fxLayout fxLayoutAlign="center">
+    <div fxFlex="250px" fxFlex.gt-xs="350px" fxFlex.gt-sm="500px">
+      <form [formGroup]="createForm" (ngSubmit)="submit()" novalidate fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="stretch">
+        <mat-form-field>
+          <input matInput [formControl]="label">
+          <mat-placeholder>Label</mat-placeholder>
+          <mat-error *ngIf="label.invalid">{{getLabelMessage()}}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [formControl]="password">
+          <mat-placeholder>Password</mat-placeholder>
+          <mat-error *ngIf="password.invalid">{{getPasswordMessage()}}</mat-error>
+        </mat-form-field>
+        <div class="min-margin">
+          <button mat-raised-button color="primary" type="submit" [disabled]="createForm.invalid">
+            Save
+          </button>
+          <button mat-raised-button mat-dialog-close color="warn">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>

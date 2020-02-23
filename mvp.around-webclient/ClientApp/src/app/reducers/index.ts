@@ -21,3 +21,6 @@ export const reducers: ActionReducerMap<AppState> = {
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [] : [];
+
+export const selectGeolocation = createFeatureSelector<AppState, fromGeolocation.GeolocationState>(fromGeolocation.geolocationFeatureKey);
+export const selectGroups = createFeatureSelector<AppState, fromGroup.GroupsState>(fromGroup.groupsFeatureKey);

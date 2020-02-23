@@ -6,12 +6,11 @@ import { OidcFacade } from 'ng-oidc-client';
 import { User } from 'oidc-client';
 import { Store, select } from '@ngrx/store';
 
-import { AppState } from '../../reducers/index';
-import { geolocationFeatureKey } from '../../reducers/geolocation/geolocation.reducer';
+import { AppState, selectGeolocation } from '../../reducers/index';
 import { UpdateGeolocation } from '../../actions/geolocation.actions';
 import { Geolocation } from '../../models/geolocation.model';
 
-import { checkGeolocation } from 'src/app/helpers/geolocationHelper';
+import { checkGeolocation } from '../../helpers/geolocationHelper';
 
 @Component({
   selector: 'app-home',
@@ -31,7 +30,7 @@ export class HomeComponent implements OnInit {
   loggedIn$: Observable<boolean>;
 
   constructor(private store: Store<AppState>, private oidcFacade: OidcFacade) {
-    this.geolocation$ = store.pipe(select(geolocationFeatureKey));
+    this.geolocation$ = store.pipe(select(selectGeolocation));
     this.loggedIn$ = oidcFacade.loggedIn$;
 
     this.updateGeolocation = this.updateGeolocation.bind(this);

@@ -1,0 +1,25 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h4>{{group.id}} ({{group.label}})</h4>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-form-field>
+      <input matInput [formControl]="label">
+      <mat-placeholder>Label</mat-placeholder>
+      <mat-error *ngIf="label.invalid">{{getLabelMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [formControl]="password">
+      <mat-placeholder>Password</mat-placeholder>
+      <mat-error *ngIf="password.invalid">{{getPasswordMessage()}}</mat-error>
+    </mat-form-field>
+    <div class="min-margin">
+      <button (click)="save()" mat-raised-button color="primary" [disabled]="notNeedSave()">
+        Save
+      </button>
+      <button (click)="leave()" mat-raised-button color="warn">
+        Leave
+      </button>
+    </div>
+  </mat-expansion-panel>

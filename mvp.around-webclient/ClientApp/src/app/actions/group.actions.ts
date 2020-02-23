@@ -60,13 +60,13 @@ export class UpdateGroups implements Action {
 export class DeleteGroup implements Action {
   readonly type = GroupActionTypes.DeleteGroup;
 
-  constructor(public payload: { id: string }) {}
+  constructor(public payload: { id: number }) {}
 }
 
 export class DeleteGroups implements Action {
   readonly type = GroupActionTypes.DeleteGroups;
 
-  constructor(public payload: { ids: string[] }) {}
+  constructor(public payload: { ids: number[] }) {}
 }
 
 export class ClearGroups implements Action {

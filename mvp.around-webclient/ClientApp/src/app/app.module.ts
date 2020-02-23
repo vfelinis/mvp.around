@@ -12,8 +12,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialogModule } from '@angular/material/dialog';
 // import { MatCardModule } from '@angular/material/card';
-// import { MatDialogModule } from '@angular/material/dialog';
 // import { MatFormFieldModule } from '@angular/material/form-field';
 // import { MatInputModule } from '@angular/material/input';
 // import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -33,6 +33,7 @@ import { environment } from '../environments/environment';
 import { NavComponent } from './shared/components/nav/nav.component';
 import { ButtonComponent } from './shared/components/button/button.component';
 import { LinkComponent } from './shared/components/link/link.component';
+import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 
 export const oidcConfigSettings: Config = {
   oidc_config: {
@@ -58,11 +59,11 @@ export const oidcConfigSettings: Config = {
     AppComponent,
     NavComponent,
     ButtonComponent,
-    LinkComponent
+    LinkComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     StoreModule.forRoot(reducers, {
       metaReducers, 
       runtimeChecks: {
@@ -70,6 +71,7 @@ export const oidcConfigSettings: Config = {
         strictActionImmutability: true,
       }
     }),
+    AppRoutingModule,
     !environment.production ? StoreDevtoolsModule.instrument({
       name: 'ng-oidc-client',
       logOnly: true
@@ -82,8 +84,14 @@ export const oidcConfigSettings: Config = {
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
+    MatDialogModule,
   ],
-  providers: [],
+  providers: [
+    
+  ],
+  entryComponents: [
+    ConfirmDialogComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
