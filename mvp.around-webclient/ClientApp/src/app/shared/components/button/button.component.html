@@ -1,0 +1,10 @@
+<ng-template [ngIf]="isMenuTrigger">
+    <button mat-button [mat-menu-trigger-for]="menuName">
+        <mat-icon>menu</mat-icon>
+    </button>
+</ng-template>
+<ng-template [ngIf]="!isMenuTrigger">
+    <button mat-button>
+        {{text}}
+    </button>
+</ng-template>

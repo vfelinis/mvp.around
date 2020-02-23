@@ -9,14 +9,13 @@
                 <ng-template #profile>
                     <button mat-button [mat-menu-trigger-for]="userMenu">
                         <mat-icon>person</mat-icon>
-                        {{(identity$ | async).profile.name}}
                         <mat-icon>expand_more</mat-icon>
                     </button>
                 </ng-template>
                 <ng-template #login>
-                    <button mat-button (click)="loginPopup()">
+                    <button mat-button (click)="signinPopup()">
                         <mat-icon>input</mat-icon>
-                        <span>Login</span>
+                        <span>Sign in</span>
                     </button>
                 </ng-template>
             </div>
@@ -33,18 +32,18 @@
     <div *ngIf="(loggedIn$ | async) === true; then profileMenu else loginMenu"></div>
     <ng-template #profileMenu>
         <button mat-menu-item [mat-menu-trigger-for]="userMenu">
-            {{(identity$ | async).profile.name}}
+            <mat-icon>person</mat-icon>
         </button>
     </ng-template>
     <ng-template #loginMenu>
-        <button mat-menu-item (click)="loginPopup()">
-            <span>Login</span>
+        <button mat-menu-item (click)="signinPopup()">
+            <span>Sign in</span>
         </button>
     </ng-template>
 </mat-menu>
 
 <mat-menu #userMenu="matMenu">
-    <button mat-menu-item (click)="logoutPopup()">
-        <span>Logout</span>
+    <button mat-menu-item (click)="signoutPopup()">
+        <span>Sign out</span>
     </button>
 </mat-menu>

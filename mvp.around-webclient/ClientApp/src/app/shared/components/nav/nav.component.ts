@@ -11,22 +11,20 @@ import { OidcFacade } from 'ng-oidc-client';
 })
 export class NavComponent implements OnInit {
 
-  identity$: Observable<User>;
   loggedIn$: Observable<boolean>;
 
   constructor(private oidcFacade: OidcFacade) {
     this.loggedIn$ = oidcFacade.loggedIn$;
-    this.identity$ = oidcFacade.identity$;
    }
 
   ngOnInit(): void {
   }
 
-  loginPopup(): void {
+  signinPopup(): void {
     this.oidcFacade.signinPopup();
   }
 
-  logoutPopup(): void {
+  signoutPopup(): void {
     this.oidcFacade.signoutPopup();
   }
 

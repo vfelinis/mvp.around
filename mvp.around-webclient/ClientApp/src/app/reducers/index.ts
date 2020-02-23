@@ -6,16 +6,18 @@ import {
   MetaReducer
 } from '@ngrx/store';
 import { environment } from '../../environments/environment';
-import * as fromUser from './user/user.reducer';
+import * as fromGeolocation from './geolocation/geolocation.reducer';
+import * as fromGroup from './group/group.reducer';
 
 
-export interface State {
-  [fromUser.usersFeatureKey]: fromUser.State;
+export interface AppState {
+  [fromGeolocation.geolocationFeatureKey]: fromGeolocation.GeolocationState;
+  [fromGroup.groupsFeatureKey]: fromGroup.GroupsState;
 }
 
-export const reducers: ActionReducerMap<State> = {
-  [fromUser.usersFeatureKey]: fromUser.reducer,
+export const reducers: ActionReducerMap<AppState> = {
+  [fromGeolocation.geolocationFeatureKey]: fromGeolocation.reducer,
+  [fromGroup.groupsFeatureKey]: fromGroup.reducer,
 };
 
-
-export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];
+export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [] : [];

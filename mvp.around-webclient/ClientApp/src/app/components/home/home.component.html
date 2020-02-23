@@ -1,7 +1,27 @@
-
 <div id="primary-header" class="mat-h1">
   <span>Home</span>
 </div>
-<div id="content" fxLayout fxLayoutAlign="center">
-  <div id="map" style="width:500px; height:400px"></div>
+<div fxLayout="column" fxLayoutAlign="center" gdAlignColumns="center" fxLayoutGap="10px">
+  <!-- <div id="map" style="width:500px; height:400px"></div> -->
+  <div *ngIf="!((geolocation$ | async).isAvailable)" class="mat-h2">
+    <mat-card>
+      You need to allow geolocation in browser!
+    </mat-card>
+  </div>
+  <div *ngIf="!(loggedIn$ | async)">
+    <mat-card>
+      <div class="mat-h2">You are not logged!</div>
+      <button mat-raised-button color="primary" (click)="signinPopup()">
+        Sign in
+      </button>
+    </mat-card>
+  </div>
+  <div *ngIf="(geolocation$ | async) && (loggedIn$ | async)">
+    <mat-card>
+      <div class="mat-h2">Welcome!</div>
+      <a routerLink="/groups" mat-raised-button color="primary">
+        Jump inside
+      </a>
+    </mat-card>
+  </div>
 </div>
