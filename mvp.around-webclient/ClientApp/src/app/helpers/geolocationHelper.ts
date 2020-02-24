@@ -7,7 +7,7 @@ export function checkGeolocation(handler) {
         };
         const resolve = (pos) => {
             if (pos?.coords){
-                handler(true);
+                handler(true, pos.coords.latitude, pos.coords.longitude);
             } else {
                 handler(false);
             }

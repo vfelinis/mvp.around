@@ -14,11 +14,11 @@
       <mat-placeholder>Password</mat-placeholder>
       <mat-error *ngIf="password.invalid">{{getPasswordMessage()}}</mat-error>
     </mat-form-field>
-    <div class="min-margin">
-      <button (click)="save()" mat-raised-button color="primary" [disabled]="notNeedSave()">
+    <div>
+      <button class="min-margin" (click)="save()" mat-raised-button color="primary" [disabled]="notNeedSave()">
         Save
       </button>
-      <button (click)="leave()" mat-raised-button color="warn">
+      <button class="min-margin" (click)="leave()" mat-raised-button color="warn">
         Leave
       </button>
     </div>

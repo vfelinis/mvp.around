@@ -15,11 +15,11 @@
           <mat-placeholder>Password</mat-placeholder>
           <mat-error *ngIf="password.invalid">{{getPasswordMessage()}}</mat-error>
         </mat-form-field>
-        <div class="min-margin">
-          <button mat-raised-button color="primary" type="submit" [disabled]="createForm.invalid">
+        <div>
+          <button class="min-margin" mat-raised-button color="primary" type="submit" [disabled]="createForm.invalid">
             Save
           </button>
-          <button mat-raised-button mat-dialog-close color="warn">
+          <button class="min-margin" mat-raised-button mat-dialog-close color="warn">
             Cancel
           </button>
         </div>
