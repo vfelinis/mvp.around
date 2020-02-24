@@ -1,3 +1,4 @@
+import { LoadGroups, ClearGroups } from './../../actions/group.actions';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store, select } from '@ngrx/store';
@@ -29,6 +30,8 @@ export class GroupsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.store.dispatch(new ClearGroups());
+    this.store.dispatch(new LoadGroups());
   }
 
   onCreate(): void {

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using mvp.around_webclient.Services;
 
 namespace mvp.around_webclient
 {
@@ -26,6 +27,8 @@ namespace mvp.around_webclient
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddTransient<IGroupService, GroupService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

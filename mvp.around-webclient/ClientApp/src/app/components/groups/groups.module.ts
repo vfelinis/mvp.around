@@ -16,6 +16,7 @@ import { NewGroupComponent } from './new-group/new-group.component';
 import { GroupItemComponent } from './group-item/group-item.component';
 
 
+
 @NgModule({
   declarations: [GroupsComponent, NewGroupComponent, GroupItemComponent],
   imports: [
@@ -33,6 +34,6 @@ import { GroupItemComponent } from './group-item/group-item.component';
   ],
   entryComponents: [
     NewGroupComponent
-  ],
+  ]
 })
 export class GroupsModule { }

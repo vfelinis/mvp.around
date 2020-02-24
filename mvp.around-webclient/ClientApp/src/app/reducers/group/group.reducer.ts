@@ -51,10 +51,6 @@ export function reducer(
       return adapter.removeMany(action.payload.ids, state);
     }
 
-    case GroupActionTypes.LoadGroups: {
-      return adapter.addAll(action.payload.groups, state);
-    }
-
     case GroupActionTypes.ClearGroups: {
       return adapter.removeAll(state);
     }

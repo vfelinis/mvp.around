@@ -18,7 +18,7 @@ export enum GroupActionTypes {
 export class LoadGroups implements Action {
   readonly type = GroupActionTypes.LoadGroups;
 
-  constructor(public payload: { groups: Group[] }) {}
+  constructor() {}
 }
 
 export class AddGroup implements Action {

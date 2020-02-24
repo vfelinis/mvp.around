@@ -6,6 +6,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { NgOidcClientModule, Config } from 'ng-oidc-client';
 import { WebStorageStateStore, Log } from 'oidc-client';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatMenuModule } from '@angular/material/menu';
@@ -27,13 +28,15 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { reducers, metaReducers } from './reducers';
-import { UserEffects } from './effects/user/user.effects';
 
 import { environment } from '../environments/environment';
 import { NavComponent } from './shared/components/nav/nav.component';
 import { ButtonComponent } from './shared/components/button/button.component';
 import { LinkComponent } from './shared/components/link/link.component';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
+import { GroupEffects } from './effects/group/group.effects';
+import { GroupService } from './services/groupService';
+import { OidcInterceptorService } from './interceptors/oidcInterceptorService';
 
 export const oidcConfigSettings: Config = {
   oidc_config: {
@@ -76,7 +79,7 @@ export const oidcConfigSettings: Config = {
       name: 'ng-oidc-client',
       logOnly: true
     }) : [],
-    EffectsModule.forRoot([UserEffects]),
+    EffectsModule.forRoot([GroupEffects]),
     NgOidcClientModule.forRoot(oidcConfigSettings),
     BrowserAnimationsModule,
     FlexLayoutModule,
@@ -85,9 +88,15 @@ export const oidcConfigSettings: Config = {
     MatIconModule,
     MatToolbarModule,
     MatDialogModule,
+    HttpClientModule
   ],
   providers: [
-    
+    GroupService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: OidcInterceptorService,
+      multi: true
+    }
   ],
   entryComponents: [
     ConfirmDialogComponent
