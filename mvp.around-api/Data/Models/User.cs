@@ -10,8 +10,8 @@ namespace mvp.around_api.Data.Models
     {
         public int Id { get; set; }
         public string Identifier { get; set; }
-        public DateTime DTU { get; set; }
-        public DateTime DTC { get; set; }
+        public DateTime DTU { get; set; } = DateTime.UtcNow;
+        public DateTime DTC { get; set; } = DateTime.UtcNow;
 
         public List<UserGroup> UsersGroups { get; set; } = new List<UserGroup>();
     }

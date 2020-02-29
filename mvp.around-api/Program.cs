@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using mvp.around_api.Data;
+using mvp.around_api.Extensions;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Compact;
 
 namespace mvp.around_api
 {
@@ -19,12 +23,50 @@ namespace mvp.around_api
             .AddEnvironmentVariables()
             .Build();
 
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            SeedData.EnsureSeedData(connectionString);
-            host.Run();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("System", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.File(
+                    formatter: new RenderedCompactJsonFormatter(),
+                    path: Configuration.LogsPath(),
+                    restrictedToMinimumLevel: Configuration.LogsMinLevel() == "Info" ? LogEventLevel.Information : LogEventLevel.Debug,
+                    fileSizeLimitBytes: 1_000_000,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(10),
+                    rollOnFileSizeLimit: true
+                )
+                .CreateLogger();
+
+            try
+            {
+                var seed = args.Contains("/seed");
+                if (seed)
+                {
+                    args = args.Except(new[] { "/seed" }).ToArray();
+                }
+
+                var host = CreateHostBuilder(args).Build();
+
+                var connectionString = Configuration.GetConnectionString("DefaultConnection");
+                SeedData.EnsureSeedData(connectionString);
+
+                Log.Information("Starting host...");
+                host.Run();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly.");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         // Additional configuration is required to successfully run gRPC on macOS.
@@ -34,6 +76,7 @@ namespace mvp.around_api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseSerilog();
                 });
     }
 }

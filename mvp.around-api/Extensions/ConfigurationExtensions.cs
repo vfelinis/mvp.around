@@ -12,5 +12,15 @@ namespace mvp.around_api.Extensions
         {
             return config.GetValue<string>("Authentication:Authority");
         }
+
+        public static string LogsPath(this IConfiguration config)
+        {
+            return config.GetValue<string>("Logs:Path");
+        }
+
+        public static string LogsMinLevel(this IConfiguration config)
+        {
+            return config.GetValue<string>("Logs:MinLevel");
+        }
     }
 }

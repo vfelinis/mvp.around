@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grpc.Core;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using mvp.around_webclient.Services;
+using mvp.around_api.Services;
+using mvp.around_webclient.Extensions;
 
 namespace mvp.around_webclient.Controllers
 {
@@ -14,21 +18,82 @@ namespace mvp.around_webclient.Controllers
     [Route("api/[controller]")]
     public class GroupsController : ControllerBase
     {
-        private readonly IGroupService _groupService;
         private readonly ILogger<GroupsController> _logger;
+        private readonly string _apiEndpoint;
 
-        public GroupsController(IGroupService groupService, ILogger<GroupsController> logger)
+        public GroupsController(IConfiguration config, ILogger<GroupsController> logger)
         {
-            _groupService = groupService;
             _logger = logger;
+            _apiEndpoint = config.ApiEndpoint();
         }
 
         [HttpGet]
         public async Task<object> Get()
         {
-            var accessToken = Request.Headers["Authorization"];
-            var result = await _groupService.GetGroups(accessToken);
-            return Ok(result);
+            try
+            {
+                var response = await GrpcClient.GetGroupsAsync(new GetGroupsRequest(), Headers);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Problem(ex.Message, statusCode: 500);
+            }
         }
+
+        [HttpPost]
+        public async Task<object> Post(CreateGroupRequest request)
+        {
+            if (request == null) return BadRequest("request is null");
+            try
+            {
+                var response = await GrpcClient.CreateGroupAsync(request, Headers);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<object> Put(UpdateGroupRequest request)
+        {
+            if (request == null) return BadRequest("request is null");
+            try
+            {
+                var response = await GrpcClient.UpdateGroupAsync(request, Headers);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<object> Delete(LeaveGroupRequest request)
+        {
+            if (request == null) return BadRequest("request is null");
+            try
+            {
+                var response = await GrpcClient.LeaveGroupAsync(request, Headers);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Problem(ex.Message);
+            }
+        }
+
+        private Metadata Headers => new Metadata {
+            new Metadata.Entry("Authorization", Request.Headers["Authorization"])
+        };
+
+        private GrpcGroup.GrpcGroupClient GrpcClient => new GrpcGroup.GrpcGroupClient(GrpcChannel.ForAddress(_apiEndpoint));
     }
 }

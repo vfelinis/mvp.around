@@ -37,13 +37,6 @@ namespace mvp.around_api.Data.Stores
                 .ToListAsync();
         }
 
-        public async Task<Group> GetGroupById(int id)
-        {
-            return await Groups
-                .Include(s => s.UsersGroups).ThenInclude(s => s.Select(x => x.User))
-                .FirstOrDefaultAsync(s => s.Id == id);
-        }
-
         public async Task CreateGroup(Group group)
         {
             await Groups.AddAsync(group);
@@ -52,7 +45,8 @@ namespace mvp.around_api.Data.Stores
 
         public async Task<UserGroup> GetUserGroup(int userId, int groupId)
         {
-            return await UsersGroups.FirstOrDefaultAsync(s => s.UserId == userId && s.GroupId == groupId);
+            return await UsersGroups.Include(s => s.Group)
+                .FirstOrDefaultAsync(s => s.UserId == userId && s.GroupId == groupId);
         }
 
         public async Task RemoveUserGroup(UserGroup userGroup)

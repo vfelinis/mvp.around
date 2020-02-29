@@ -9,7 +9,6 @@ namespace mvp.around_api.Data.Stores
         Task SaveChanges();
         Task<User> GetUserByIdentifier(string identifier);
         Task<List<UserGroup>> GetGroupsByUserId(int userId);
-        Task<Group> GetGroupById(int id);
         Task CreateGroup(Group group);
         Task<UserGroup> GetUserGroup(int userId, int groupId);
         Task RemoveUserGroup(UserGroup userGroup);

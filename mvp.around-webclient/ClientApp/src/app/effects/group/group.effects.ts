@@ -20,7 +20,7 @@ export class GroupEffects {
     ofType(GroupActionTypes.LoadGroups),
     mergeMap(() => this.service.getGroups()
       .pipe(
-        map(response => new AddGroups({ groups: (<any>response).data })),
+        map(response => new AddGroups({ groups: response.data })),
         catchError(() => EMPTY)
       ))
     )

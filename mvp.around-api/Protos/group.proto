@@ -7,44 +7,33 @@ package group;
 service GrpcGroup {
   // Sends a greeting
   rpc GetGroups (GetGroupsRequest) returns (GetGroupsResponse);
-  rpc GetGroup (GetGroupRequest) returns (GetGroupResponse);
   rpc CreateGroup (CreateGroupRequest) returns (CreateGroupResponse);
   rpc LeaveGroup (LeaveGroupRequest) returns (LeaveGroupResponse);
-  rpc SaveUserGroup (SaveUserGroupRequest) returns (SaveUserGroupResponse);
+  rpc UpdateGroup (UpdateGroupRequest) returns (UpdateGroupResponse);
 }
 
 // Requests
 message GetGroupsRequest {
 }
 
-message GetGroupRequest {
-    int32 Id = 1;
-}
-
 message CreateGroupRequest {
-    GroupDto Data = 1;
+    GroupDto Group = 1;
 }
 
 message LeaveGroupRequest {
     int32 Id = 1;
 }
 
-message SaveUserGroupRequest {
+message UpdateGroupRequest {
     GroupDto Group = 1;
-    UserDto User = 2;
 }
 
 // Responses
 message GetGroupsResponse {
     bool Success = 1;
     string Message = 2;
-    repeated GroupDto Data = 3;
-}
-
-message GetGroupResponse {
-    bool Success = 1;
-    string Message = 2;
-    GroupDto Data = 3;
+    int32 UserId = 3;
+    repeated GroupDto Groups = 4;
 }
 
 message CreateGroupResponse {
@@ -58,7 +47,7 @@ message LeaveGroupResponse {
     string Message = 2;
 }
 
-message SaveUserGroupResponse {
+message UpdateGroupResponse {
     bool Success = 1;
     string Message = 2;
 }
@@ -68,12 +57,5 @@ message GroupDto {
     int32 Id = 1;
     string Label = 2;
     string Password = 3;
-    UserDto CurrentUser = 4;
-    repeated UserDto Users = 5;
-}
-
-message UserDto {
-    int32 Id = 1;
-    string Name = 2;
-    int32 Role = 3;
+    int32 Role = 4;
 }
