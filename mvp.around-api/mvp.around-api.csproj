@@ -5,7 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="mvp-around-api-dev.pfx" />
     <None Remove="Protos\group.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="mvp-around-api-dev.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
