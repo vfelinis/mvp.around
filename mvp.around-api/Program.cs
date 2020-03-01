@@ -78,13 +78,13 @@ namespace mvp.around_api
                 {
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseSerilog();
-                    webBuilder.ConfigureKestrel(kestrel =>
-                    {
-                        kestrel.ConfigureHttpsDefaults(https =>
-                        {
-                            https.ServerCertificate = new X509Certificate2("mvp-around-api-dev.pfx", "123456");
-                        });
-                    });
+                    //webBuilder.ConfigureKestrel(kestrel =>
+                    //{
+                    //    kestrel.ConfigureHttpsDefaults(https =>
+                    //    {
+                    //        https.ServerCertificate = new X509Certificate2("mvp-around-api-dev.pfx", "123456");
+                    //    });
+                    //});
                 });
     }
 }
