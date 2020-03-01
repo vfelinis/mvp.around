@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
-import { Group } from 'src/app/models/group.model';
+import { Group, Role } from 'src/app/models/group.model';
 import { AppState } from 'src/app/reducers';
 import { AddGroup } from 'src/app/actions/group.actions';
 
@@ -17,15 +17,18 @@ export class NewGroupComponent implements OnInit {
   public createForm: FormGroup;
   public label: FormControl;
   public password: FormControl;
+  public userName: FormControl;
 
   constructor(private store: Store<AppState>,
     private dialogRef: MatDialogRef<NewGroupComponent>
   ) {
     this.label = new FormControl('', [Validators.required]);
-    this.password = new FormControl('', [Validators.required, Validators.pattern('.{8,}')]);
+    this.password = new FormControl('');
+    this.userName = new FormControl('', [Validators.required]);
     this.createForm = new FormGroup({
       label: this.label,
-      password: this.password
+      password: this.password,
+      userName: this.userName
     });
   }
 
@@ -36,18 +39,20 @@ export class NewGroupComponent implements OnInit {
     return this.label.hasError('required') ? 'You must enter a value' : '';
   }
 
-  getPasswordMessage() {
-    return this.password.hasError('required') || this.password.hasError('pattern')
-            ? 'You must enter eight or more characters'
+  getUserNamedMessage() {
+    return this.userName.hasError('required')
+            ? 'You must enter a value'
             : '';
   }
 
   submit() {
     if (this.createForm.status === 'VALID') {
       const newGroup: Group = {
-        id: 1 + Math.floor((1000 - 1) * Math.random()),
+        id: 0,
         label: this.label.value,
-        password: this.password.value
+        password: this.password.value,
+        userName: this.userName.value,
+        userRole: Role.Owner
       };
       this.store.dispatch(new AddGroup({group: newGroup}));
       this.dialogRef.close();

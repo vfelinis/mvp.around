@@ -22,5 +22,10 @@ namespace mvp.around_webclient.Extensions
         {
             return config.GetValue<string>("Logs:MinLevel");
         }
+
+        public static string AuthenticationAuthority(this IConfiguration config)
+        {
+            return config.GetValue<string>("Authentication:Authority");
+        }
     }
 }

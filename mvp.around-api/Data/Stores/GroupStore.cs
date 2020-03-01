@@ -24,17 +24,22 @@ namespace mvp.around_api.Data.Stores
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<User> GetUserByIdentifier(string identifier)
+        public async Task<User> GetUser(string identifier)
         {
             return await Users.FirstOrDefaultAsync(s => s.Identifier == identifier);
         }
 
-        public async Task<List<UserGroup>> GetGroupsByUserId(int userId)
+        public async Task<List<UserGroup>> GetGroups(int userId)
         {
             return await UsersGroups
                 .Include(s => s.Group)
                 .Where(s => s.UserId == userId)
                 .ToListAsync();
+        }
+
+        public async Task<Group> GetGroup(int groupId)
+        {
+            return await Groups.FirstOrDefaultAsync(s => s.Id == groupId);
         }
 
         public async Task CreateGroup(Group group)
@@ -47,6 +52,12 @@ namespace mvp.around_api.Data.Stores
         {
             return await UsersGroups.Include(s => s.Group)
                 .FirstOrDefaultAsync(s => s.UserId == userId && s.GroupId == groupId);
+        }
+
+        public async Task AddUserGroup(UserGroup userGroup)
+        {
+            UsersGroups.Add(userGroup);
+            await SaveChanges();
         }
 
         public async Task RemoveUserGroup(UserGroup userGroup)

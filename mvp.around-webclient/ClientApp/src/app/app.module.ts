@@ -44,7 +44,7 @@ export const oidcConfigSettings: Config = {
     client_id: 'around-client',
     redirect_uri: !environment.production ? 'https://localhost:5003/callback.html' : 'https://mvp-stack.com/callback.html',
     response_type: 'code',
-    scope: 'openid offline_access api',
+    scope: 'openid offline_access api spa',
     post_logout_redirect_uri: !environment.production ? 'https://localhost:5003/signout-callback.html' : 'https://mvp-stack.com/signout-callback.html',
     silent_redirect_uri: !environment.production ? 'https://localhost:5003/renew-callback.html' : 'https://mvp-stack.com/renew-callback.html',
     accessTokenExpiringNotificationTime: 10,

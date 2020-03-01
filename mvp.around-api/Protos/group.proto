@@ -7,25 +7,35 @@ package group;
 service GrpcGroup {
   // Sends a greeting
   rpc GetGroups (GetGroupsRequest) returns (GetGroupsResponse);
+  rpc GetGroup (GetGroupRequest) returns (GetGroupResponse);
   rpc CreateGroup (CreateGroupRequest) returns (CreateGroupResponse);
-  rpc LeaveGroup (LeaveGroupRequest) returns (LeaveGroupResponse);
   rpc UpdateGroup (UpdateGroupRequest) returns (UpdateGroupResponse);
+  rpc ConnectGroup (ConnectGroupRequest) returns (ConnectGroupResponse);
+  rpc LeaveGroup (LeaveGroupRequest) returns (LeaveGroupResponse);
 }
 
 // Requests
 message GetGroupsRequest {
 }
 
+message GetGroupRequest {
+    int32 Id = 1;
+}
+
 message CreateGroupRequest {
+    GroupDto Group = 1;
+}
+
+message UpdateGroupRequest {
+    GroupDto Group = 1;
+}
+
+message ConnectGroupRequest {
     GroupDto Group = 1;
 }
 
 message LeaveGroupRequest {
     int32 Id = 1;
-}
-
-message UpdateGroupRequest {
-    GroupDto Group = 1;
 }
 
 // Responses
@@ -36,18 +46,30 @@ message GetGroupsResponse {
     repeated GroupDto Groups = 4;
 }
 
+message GetGroupResponse {
+    bool Success = 1;
+    string Message = 2;
+    int32 UserId = 3;
+    GroupDto Group = 4;
+}
+
 message CreateGroupResponse {
     bool Success = 1;
     string Message = 2;
     int32 Id = 3;
 }
 
-message LeaveGroupResponse {
+message UpdateGroupResponse {
     bool Success = 1;
     string Message = 2;
 }
 
-message UpdateGroupResponse {
+message ConnectGroupResponse {
+    bool Success = 1;
+    string Message = 2;
+}
+
+message LeaveGroupResponse {
     bool Success = 1;
     string Message = 2;
 }
@@ -57,5 +79,6 @@ message GroupDto {
     int32 Id = 1;
     string Label = 2;
     string Password = 3;
-    int32 Role = 4;
+    string UserName = 4;
+    int32 UserRole = 5;
 }

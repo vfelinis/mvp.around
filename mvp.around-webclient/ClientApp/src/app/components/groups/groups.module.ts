@@ -14,11 +14,12 @@ import { GroupsRoutingModule } from './groups-routing.module';
 import { GroupsComponent } from './groups.component';
 import { NewGroupComponent } from './new-group/new-group.component';
 import { GroupItemComponent } from './group-item/group-item.component';
+import { GroupDetailComponent } from './group-detail/group-detail.component';
 
 
 
 @NgModule({
-  declarations: [GroupsComponent, NewGroupComponent, GroupItemComponent],
+  declarations: [GroupsComponent, NewGroupComponent, GroupItemComponent, GroupDetailComponent],
   imports: [
     CommonModule,
     GroupsRoutingModule,

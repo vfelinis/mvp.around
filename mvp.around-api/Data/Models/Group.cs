@@ -23,7 +23,7 @@ namespace mvp.around_api.Data.Models
         {
             modelBuilder.Entity<Group>(c =>
             {
-                c.Property(p => p.Password).IsRequired(true);
+                c.Property(p => p.Password).IsRequired(true).HasMaxLength(50);
                 c.Property(p => p.DTC).HasColumnType("datetime2");
                 c.Property(p => p.DTU).HasColumnType("datetime2");
 

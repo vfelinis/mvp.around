@@ -1,7 +1,7 @@
 <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <h4>{{group.id}} ({{group.label}})</h4>
+        <h4>Id: {{group.id}} (Label: {{group.label}})</h4>
       </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-form-field>
@@ -12,7 +12,11 @@
     <mat-form-field>
       <input matInput [formControl]="password">
       <mat-placeholder>Password</mat-placeholder>
-      <mat-error *ngIf="password.invalid">{{getPasswordMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [formControl]="userName">
+      <mat-placeholder>User Name</mat-placeholder>
+      <mat-error *ngIf="userName.invalid">{{getUserNamedMessage()}}</mat-error>
     </mat-form-field>
     <div>
       <button class="min-margin" (click)="save()" mat-raised-button color="primary" [disabled]="notNeedSave()">
@@ -21,5 +25,8 @@
       <button class="min-margin" (click)="leave()" mat-raised-button color="warn">
         Leave
       </button>
+      <a class="min-margin" [routerLink]="[group.id]" mat-raised-button color="primary">
+        Jump inside
+      </a>
     </div>
   </mat-expansion-panel>

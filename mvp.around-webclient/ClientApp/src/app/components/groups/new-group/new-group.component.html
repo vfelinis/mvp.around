@@ -13,7 +13,11 @@
         <mat-form-field>
           <input matInput [formControl]="password">
           <mat-placeholder>Password</mat-placeholder>
-          <mat-error *ngIf="password.invalid">{{getPasswordMessage()}}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [formControl]="userName">
+          <mat-placeholder>User Name</mat-placeholder>
+          <mat-error *ngIf="userName.invalid">{{getUserNamedMessage()}}</mat-error>
         </mat-form-field>
         <div>
           <button class="min-margin" mat-raised-button color="primary" type="submit" [disabled]="createForm.invalid">

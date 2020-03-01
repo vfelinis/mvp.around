@@ -18,35 +18,40 @@ export class GroupItemComponent implements OnInit {
 
   public label: FormControl;
   public password: FormControl;
+  public userName: FormControl;
 
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.label = new FormControl(this.group.label, [Validators.required]);
-    this.password = new FormControl(this.group.password, [Validators.required, Validators.pattern('.{8,}')]);
+    this.password = new FormControl(this.group.password);
+    this.userName = new FormControl(this.group.userName, [Validators.required]);
   }
 
   getLabelMessage() {
     return this.label.hasError('required') ? 'You must enter a value' : '';
   }
 
-  getPasswordMessage() {
-    return this.password.hasError('required') || this.password.hasError('pattern')
-            ? 'You must enter eight or more characters'
+  getUserNamedMessage() {
+    return this.userName.hasError('required')
+            ? 'You must enter a value'
             : '';
   }
 
   notNeedSave() {
     return this.group.label === this.label.value
-      && this.group.password === this.password.value;
+      && this.group.password === this.password.value
+      && this.group.userName === this.userName.value;
   }
 
   save(): void {
-    if (!this.label.invalid && !this.password.invalid) {
+    if (!this.label.invalid && !this.userName.invalid) {
       const updatedGroup: Group = {
         id: this.group.id,
         label: this.label.value,
-        password: this.password.value
+        password: this.password.value,
+        userName: this.userName.value,
+        userRole: this.group.userRole
       };
       this.onSave.emit(updatedGroup);
     }
