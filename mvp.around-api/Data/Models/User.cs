@@ -23,8 +23,8 @@ namespace mvp.around_api.Data.Models
             modelBuilder.Entity<User>(c =>
             {
                 c.Property(p => p.Identifier).IsRequired(true);
-                c.Property(p => p.DTC).HasColumnType("datetime2");
-                c.Property(p => p.DTU).HasColumnType("datetime2");
+                //c.Property(p => p.DTC).HasColumnType("datetime2");
+                //c.Property(p => p.DTU).HasColumnType("datetime2");
 
             });
             modelBuilder.Entity<User>()

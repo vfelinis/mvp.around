@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace mvp.aroundapi.Migrations
+namespace mvp.aroundapi.Data.Migrations
 {
-    public partial class MyFirstMigration : Migration
+    public partial class _001 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,11 +12,11 @@ namespace mvp.aroundapi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Password = table.Column<string>(nullable: false),
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Password = table.Column<string>(maxLength: 50, nullable: false),
                     UsersLimit = table.Column<int>(nullable: false),
-                    DTU = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DTC = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DTU = table.Column<DateTime>(nullable: false),
+                    DTC = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,10 +28,10 @@ namespace mvp.aroundapi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Identifier = table.Column<string>(nullable: false),
-                    DTU = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DTC = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DTU = table.Column<DateTime>(nullable: false),
+                    DTC = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,12 +43,12 @@ namespace mvp.aroundapi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GroupLabel = table.Column<string>(nullable: false),
+                        .Annotation("Sqlite:Autoincrement", true),
+                    GroupLabel = table.Column<string>(maxLength: 50, nullable: false),
+                    UserName = table.Column<string>(maxLength: 50, nullable: false),
                     UserRole = table.Column<int>(nullable: false),
-                    UserName = table.Column<string>(nullable: false),
-                    DTU = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DTC = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DTU = table.Column<DateTime>(nullable: false),
+                    DTC = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     GroupId = table.Column<int>(nullable: false)
                 },

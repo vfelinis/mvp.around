@@ -36,8 +36,8 @@ namespace mvp.around_api.Data.Models
             {
                 c.Property(p => p.GroupLabel).IsRequired(true).HasMaxLength(50);
                 c.Property(p => p.UserName).IsRequired(true).HasMaxLength(50);
-                c.Property(p => p.DTC).HasColumnType("datetime2");
-                c.Property(p => p.DTU).HasColumnType("datetime2");
+                //c.Property(p => p.DTC).HasColumnType("datetime2");
+                //c.Property(p => p.DTU).HasColumnType("datetime2");
 
             });
             modelBuilder.Entity<UserGroup>()

@@ -40,7 +40,7 @@ namespace mvp.around_api
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlite(Configuration.GetConnectionString("SQLiteConnection")));
 
             services.AddGrpc();
 
