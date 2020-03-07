@@ -86,18 +86,16 @@ namespace mvp.around_api
                     webBuilder.UseSerilog();
                     webBuilder.ConfigureKestrel(kestrel =>
                     {
-                        kestrel.Listen(IPAddress.Loopback, 5004,
+                        kestrel.Listen(IPAddress.Any, 5004,
                             listenOptions =>
                             {
-                                listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-                            });
-                        kestrel.Listen(IPAddress.Loopback, 5005,
-                            listenOptions =>
-                            {
-                                listenOptions.Protocols = HttpProtocols.Http2;
                                 if (Configuration.IsDevelopment())
                                 {
-                                    listenOptions.UseHttps(new X509Certificate2(Configuration.CertificateDevFile(), Configuration.CertificateDevPass()));
+                                    listenOptions.UseHttps(new X509Certificate2(Configuration.CertificateDevFile(), Configuration.CertificateDevPass()),
+                                        options =>
+                                        {
+                                            options.AllowAnyClientCertificate();
+                                        });
                                 }
                                 else
                                 {
@@ -115,7 +113,11 @@ namespace mvp.around_api
                                     using var rsa = RSA.Create();
                                     rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
                                     var keyPair = publicKey.CopyWithPrivateKey(rsa);
-                                    listenOptions.UseHttps(new X509Certificate2(keyPair.Export(X509ContentType.Pfx)));
+                                    listenOptions.UseHttps(new X509Certificate2(keyPair.Export(X509ContentType.Pfx)),
+                                        options =>
+                                        {
+                                            options.AllowAnyClientCertificate();
+                                        });
                                 }
                             });
                         //kestrel.ConfigureEndpointDefaults(opt =>
