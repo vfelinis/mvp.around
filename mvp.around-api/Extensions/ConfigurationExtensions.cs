@@ -22,5 +22,20 @@ namespace mvp.around_api.Extensions
         {
             return config.GetValue<string>("Logs:MinLevel");
         }
+
+        public static bool IsDevelopment(this IConfiguration config)
+        {
+            return config.GetValue<bool>("IsDevelopment");
+        }
+
+        public static string CertificateValue(this IConfiguration config)
+        {
+            return config.GetValue<string>("Certificate:Value");
+        }
+
+        public static string CertificateKey(this IConfiguration config)
+        {
+            return config.GetValue<string>("Certificate:Key");
+        }
     }
 }

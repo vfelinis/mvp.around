@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using mvp.around_api.Data;
@@ -79,13 +82,18 @@ namespace mvp.around_api
                 {
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseSerilog();
-                    //webBuilder.ConfigureKestrel(kestrel =>
-                    //{
-                    //    kestrel.ConfigureHttpsDefaults(https =>
-                    //    {
-                    //        https.ServerCertificate = new X509Certificate2("mvp-around-api-dev.pfx", "123456");
-                    //    });
-                    //});
+                    webBuilder.ConfigureKestrel(kestrel =>
+                    {
+                        kestrel.ConfigureEndpointDefaults(opt =>
+                        {
+                            opt.Protocols = HttpProtocols.Http2;
+                        });
+                        kestrel.ConfigureHttpsDefaults(https =>
+                        {
+                            https.ServerCertificate =
+                                new X509Certificate2(Configuration.CertificateValue(), Configuration.CertificateKey());
+                        });
+                    });
                 });
     }
 }
