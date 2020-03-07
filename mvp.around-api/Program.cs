@@ -87,7 +87,7 @@ namespace mvp.around_api
                     {
                         kestrel.ConfigureEndpointDefaults(opt =>
                         {
-                            opt.Protocols = HttpProtocols.Http2;
+                            opt.Protocols = HttpProtocols.Http1AndHttp2;
                         });
                         kestrel.ConfigureHttpsDefaults(https =>
                         {
