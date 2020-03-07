@@ -94,14 +94,10 @@ namespace mvp.around_api
                         kestrel.Listen(IPAddress.Loopback, 5005,
                             listenOptions =>
                             {
-                                listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                                listenOptions.Protocols = HttpProtocols.Http2;
                                 if (Configuration.IsDevelopment())
                                 {
-                                    listenOptions.UseHttps(opt =>
-                                    {
-                                        opt.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-                                        opt.ServerCertificate = new X509Certificate2(Configuration.CertificateDevFile(), Configuration.CertificateDevPass());
-                                    });
+                                    listenOptions.UseHttps(new X509Certificate2(Configuration.CertificateDevFile(), Configuration.CertificateDevPass()));
                                 }
                                 else
                                 {
@@ -119,11 +115,7 @@ namespace mvp.around_api
                                     using var rsa = RSA.Create();
                                     rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
                                     var keyPair = publicKey.CopyWithPrivateKey(rsa);
-                                    listenOptions.UseHttps(opt =>
-                                    {
-                                        opt.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-                                        opt.ServerCertificate = new X509Certificate2(keyPair.Export(X509ContentType.Pfx));
-                                    });
+                                    listenOptions.UseHttps(new X509Certificate2(keyPair.Export(X509ContentType.Pfx)));
                                 }
                             });
                         //kestrel.ConfigureEndpointDefaults(opt =>
