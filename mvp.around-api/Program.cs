@@ -15,6 +15,8 @@ using mvp.around_api.Extensions;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
+using System.Text;
+using System.Text.Json;
 
 namespace mvp.around_api
 {
@@ -29,7 +31,6 @@ namespace mvp.around_api
 
         public static int Main(string[] args)
         {
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .MinimumLevel.Override("System", LogEventLevel.Information)
@@ -90,10 +91,36 @@ namespace mvp.around_api
                         });
                         kestrel.ConfigureHttpsDefaults(https =>
                         {
-                            https.ServerCertificate =
-                                new X509Certificate2(Configuration.CertificateValue(), Configuration.CertificateKey());
+                            if (Configuration.IsDevelopment())
+                            {
+                                https.ServerCertificate =
+                                    new X509Certificate2(Configuration.CertificateDevFile(), Configuration.CertificateDevPass());
+                            }
+                            else
+                            {
+                                var jsonBytes = File.ReadAllBytes(Configuration.CertificateAcmeFile());
+                                using var jsonDoc = JsonDocument.Parse(jsonBytes);
+                                var root = jsonDoc.RootElement;
+                                var item = root.GetProperty("leresolver").GetProperty("Certificates").EnumerateArray()
+                                    .First(s => s.GetProperty("domain").GetProperty("main").GetString() == Configuration.CertificateAcmeDomain());
+                                var certBase64 = item.GetProperty("certificate").GetString();
+                                var keyBase64 = item.GetProperty("key").GetString();
+                                using var publicKey = new X509Certificate2(Convert.FromBase64String(certBase64));
+                                var privateKey = UTF8Encoding.UTF8.GetString(Convert.FromBase64String(keyBase64));
+                                var privateKeyBlocks = privateKey.Split("-", StringSplitOptions.RemoveEmptyEntries);
+                                var privateKeyBytes = Convert.FromBase64String(privateKeyBlocks[1]);
+                                using var rsa = RSA.Create();
+                                rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
+                                var keyPair = publicKey.CopyWithPrivateKey(rsa);
+                                https.ServerCertificate = new X509Certificate2(keyPair.Export(X509ContentType.Pfx));
+                            }
                         });
                     });
                 });
+    }
+
+    public class Acme
+    {
+        public int MyProperty { get; set; }
     }
 }

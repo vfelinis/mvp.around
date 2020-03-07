@@ -28,14 +28,24 @@ namespace mvp.around_api.Extensions
             return config.GetValue<bool>("IsDevelopment");
         }
 
-        public static string CertificateValue(this IConfiguration config)
+        public static string CertificateDevFile(this IConfiguration config)
         {
-            return config.GetValue<string>("Certificate:Value");
+            return config.GetValue<string>("Certificate:DevFile");
         }
 
-        public static string CertificateKey(this IConfiguration config)
+        public static string CertificateDevPass(this IConfiguration config)
         {
-            return config.GetValue<string>("Certificate:Key");
+            return config.GetValue<string>("Certificate:DevPass");
+        }
+
+        public static string CertificateAcmeFile(this IConfiguration config)
+        {
+            return config.GetValue<string>("Certificate:AcmeFile");
+        }
+
+        public static string CertificateAcmeDomain(this IConfiguration config)
+        {
+            return config.GetValue<string>("Certificate:AcmeDomain");
         }
     }
 }
