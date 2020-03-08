@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using mvp.around_api.Data;
@@ -15,9 +9,7 @@ using mvp.around_api.Extensions;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
-using System.Text;
-using System.Text.Json;
-using System.Net;
+using mvp.around_api.Helpers;
 
 namespace mvp.around_api
 {
@@ -86,76 +78,11 @@ namespace mvp.around_api
                     webBuilder.UseSerilog();
                     webBuilder.ConfigureKestrel(kestrel =>
                     {
-                        kestrel.Listen(IPAddress.Any, 5004,
-                            listenOptions =>
-                            {
-                                if (Configuration.IsDevelopment())
-                                {
-                                    listenOptions.UseHttps(new X509Certificate2(Configuration.CertificateDevFile(), Configuration.CertificateDevPass()),
-                                        options =>
-                                        {
-                                            options.AllowAnyClientCertificate();
-                                        });
-                                }
-                                else
-                                {
-                                    var jsonBytes = File.ReadAllBytes(Configuration.CertificateAcmeFile());
-                                    using var jsonDoc = JsonDocument.Parse(jsonBytes);
-                                    var root = jsonDoc.RootElement;
-                                    var item = root.GetProperty("leresolver").GetProperty("Certificates").EnumerateArray()
-                                        .First(s => s.GetProperty("domain").GetProperty("main").GetString() == Configuration.CertificateAcmeDomain());
-                                    var certBase64 = item.GetProperty("certificate").GetString();
-                                    var keyBase64 = item.GetProperty("key").GetString();
-                                    using var publicKey = new X509Certificate2(Convert.FromBase64String(certBase64));
-                                    var privateKey = UTF8Encoding.UTF8.GetString(Convert.FromBase64String(keyBase64));
-                                    var privateKeyBlocks = privateKey.Split("-", StringSplitOptions.RemoveEmptyEntries);
-                                    var privateKeyBytes = Convert.FromBase64String(privateKeyBlocks[1]);
-                                    using var rsa = RSA.Create();
-                                    rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
-                                    var keyPair = publicKey.CopyWithPrivateKey(rsa);
-                                    listenOptions.UseHttps(new X509Certificate2(keyPair.Export(X509ContentType.Pfx)),
-                                        options =>
-                                        {
-                                            options.AllowAnyClientCertificate();
-                                        });
-                                }
-                            });
-                        //kestrel.ConfigureEndpointDefaults(opt =>
-                        //{
-                        //    opt.Protocols = HttpProtocols.Http1AndHttp2;
-                        //});
-                        //kestrel.ConfigureHttpsDefaults(https =>
-                        //{
-                        //    if (Configuration.IsDevelopment())
-                        //    {
-                        //        https.ServerCertificate =
-                        //            new X509Certificate2(Configuration.CertificateDevFile(), Configuration.CertificateDevPass());
-                        //    }
-                        //    else
-                        //    {
-                        //        var jsonBytes = File.ReadAllBytes(Configuration.CertificateAcmeFile());
-                        //        using var jsonDoc = JsonDocument.Parse(jsonBytes);
-                        //        var root = jsonDoc.RootElement;
-                        //        var item = root.GetProperty("leresolver").GetProperty("Certificates").EnumerateArray()
-                        //            .First(s => s.GetProperty("domain").GetProperty("main").GetString() == Configuration.CertificateAcmeDomain());
-                        //        var certBase64 = item.GetProperty("certificate").GetString();
-                        //        var keyBase64 = item.GetProperty("key").GetString();
-                        //        using var publicKey = new X509Certificate2(Convert.FromBase64String(certBase64));
-                        //        var privateKey = UTF8Encoding.UTF8.GetString(Convert.FromBase64String(keyBase64));
-                        //        var privateKeyBlocks = privateKey.Split("-", StringSplitOptions.RemoveEmptyEntries);
-                        //        var privateKeyBytes = Convert.FromBase64String(privateKeyBlocks[1]);
-                        //        using var rsa = RSA.Create();
-                        //        rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
-                        //        var keyPair = publicKey.CopyWithPrivateKey(rsa);
-                        //        https.ServerCertificate = new X509Certificate2(keyPair.Export(X509ContentType.Pfx));
-                        //    }
-                        //});
+                        kestrel.ConfigureHttpsDefaults(https =>
+                        {
+                            https.ServerCertificate = CertificateHelper.CreateCertificate(Configuration);
+                        });
                     });
                 });
-    }
-
-    public class Acme
-    {
-        public int MyProperty { get; set; }
     }
 }
