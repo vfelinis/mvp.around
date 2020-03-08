@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace mvp.aroundapi.Data.Migrations
 {
-    public partial class _001 : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace mvp.aroundapi.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Password = table.Column<string>(maxLength: 50, nullable: false),
                     UsersLimit = table.Column<int>(nullable: false),
                     DTU = table.Column<DateTime>(nullable: false),
@@ -28,7 +28,7 @@ namespace mvp.aroundapi.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Identifier = table.Column<string>(nullable: false),
                     DTU = table.Column<DateTime>(nullable: false),
                     DTC = table.Column<DateTime>(nullable: false)
@@ -43,7 +43,7 @@ namespace mvp.aroundapi.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     GroupLabel = table.Column<string>(maxLength: 50, nullable: false),
                     UserName = table.Column<string>(maxLength: 50, nullable: false),
                     UserRole = table.Column<int>(nullable: false),
