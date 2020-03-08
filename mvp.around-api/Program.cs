@@ -50,7 +50,7 @@ namespace mvp.around_api
 
                 var host = CreateHostBuilder(args).Build();
 
-                var connectionString = Configuration.GetConnectionString("SQLiteConnection");
+                var connectionString = Configuration.GetConnectionString("DefaultConnection");
                 SeedData.EnsureSeedData(connectionString);
 
                 Log.Information("Starting host...");

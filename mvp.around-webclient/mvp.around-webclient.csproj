@@ -29,6 +29,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="mvp-around-webclient-dev.pfx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="mvp-around-webclient-dev.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\Dockerfile-webclient" Link="Dockerfile-webclient" />
   </ItemGroup>
 

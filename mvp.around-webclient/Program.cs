@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using mvp.around_webclient.Extensions;
+using mvp.around_webclient.Helpers;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
@@ -64,6 +65,13 @@ namespace mvp.around_webclient
                 {
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseSerilog();
+                    webBuilder.ConfigureKestrel(kestrel =>
+                    {
+                        kestrel.ConfigureHttpsDefaults(https =>
+                        {
+                            https.ServerCertificate = CertificateHelper.CreateCertificate(Configuration);
+                        });
+                    });
                 });
     }
 }
