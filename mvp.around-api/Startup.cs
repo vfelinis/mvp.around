@@ -44,14 +44,14 @@ namespace mvp.around_api
 
             services.AddGrpc();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
-                {
-                    options.Authority = Configuration.AuthenticationAuthority();
-                    options.RequireHttpsMetadata = false;
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddIdentityServerAuthentication(options =>
+            //    {
+            //        options.Authority = Configuration.AuthenticationAuthority();
+            //        options.RequireHttpsMetadata = false;
                     
-                    options.ApiName = "api";
-                });
+            //        options.ApiName = "api";
+            //    });
 
             //services.AddAuthorization(options =>
             //{
