@@ -24,7 +24,6 @@ namespace mvp.around_api
 
         public static int Main(string[] args)
         {
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .MinimumLevel.Override("System", LogEventLevel.Information)
@@ -81,7 +80,7 @@ namespace mvp.around_api
                     {
                         kestrel.ConfigureEndpointDefaults(opt =>
                         {
-                            opt.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
+                            opt.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1AndHttp2;
                         });
                         kestrel.ConfigureHttpsDefaults(https =>
                         {
