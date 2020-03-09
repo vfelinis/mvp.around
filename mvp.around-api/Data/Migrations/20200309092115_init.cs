@@ -12,7 +12,7 @@ namespace mvp.aroundapi.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Password = table.Column<string>(maxLength: 50, nullable: false),
                     UsersLimit = table.Column<int>(nullable: false),
                     DTU = table.Column<DateTime>(nullable: false),
@@ -28,7 +28,7 @@ namespace mvp.aroundapi.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Identifier = table.Column<string>(nullable: false),
                     DTU = table.Column<DateTime>(nullable: false),
                     DTC = table.Column<DateTime>(nullable: false)
@@ -43,7 +43,7 @@ namespace mvp.aroundapi.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     GroupLabel = table.Column<string>(maxLength: 50, nullable: false),
                     UserName = table.Column<string>(maxLength: 50, nullable: false),
                     UserRole = table.Column<int>(nullable: false),
