@@ -11,7 +11,7 @@ using mvp.around_api.Data.Stores;
 
 namespace mvp.around_api.Services
 {
-    //[Authorize]
+    [Authorize]
     public class GroupService : GrpcGroup.GrpcGroupBase
     {
         private readonly IGroupStore _groupStore;

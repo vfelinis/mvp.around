@@ -31,35 +31,27 @@ namespace mvp.around_api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.Configure<ForwardedHeadersOptions>(options =>
-            //{
-            //    options.ForwardedHeaders =
-            //        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            //    options.KnownNetworks.Clear();
-            //    options.KnownProxies.Clear();
-            //});
-
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("SQLiteConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddGrpc();
 
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddIdentityServerAuthentication(options =>
-            //    {
-            //        options.Authority = Configuration.AuthenticationAuthority();
-            //        options.RequireHttpsMetadata = false;
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = Configuration.AuthenticationAuthority();
+                    options.RequireHttpsMetadata = false;
 
-            //        options.ApiName = "api";
-            //    });
+                    options.ApiName = "api";
+                });
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("protectedScope", policy =>
-            //    {
-            //        policy.RequireClaim("api");
-            //    });
-            //});
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("protectedScope", policy =>
+                {
+                    policy.RequireClaim("api");
+                });
+            });
 
             services.AddTransient<IGroupStore, GroupStore>();
         }
@@ -67,22 +59,15 @@ namespace mvp.around_api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            //else
-            //{
-            //    app.UseHsts();
-            //}
-
-            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

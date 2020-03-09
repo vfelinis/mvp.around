@@ -13,7 +13,7 @@ namespace mvp.around_api.Data
         {
             var services = new ServiceCollection();
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlite(connectionString));
+               options.UseSqlServer(connectionString));
 
             using (var serviceProvider = services.BuildServiceProvider())
             {
