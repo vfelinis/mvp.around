@@ -78,10 +78,6 @@ namespace mvp.around_api
                     webBuilder.UseSerilog();
                     webBuilder.ConfigureKestrel(kestrel =>
                     {
-                        kestrel.ConfigureEndpointDefaults(opt =>
-                        {
-                            opt.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1AndHttp2;
-                        });
                         kestrel.ConfigureHttpsDefaults(https =>
                         {
                             https.ServerCertificate = CertificateHelper.CreateCertificate(Configuration);

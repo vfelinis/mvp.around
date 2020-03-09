@@ -49,7 +49,7 @@ namespace mvp.around_api
             //    {
             //        options.Authority = Configuration.AuthenticationAuthority();
             //        options.RequireHttpsMetadata = false;
-                    
+
             //        options.ApiName = "api";
             //    });
 
