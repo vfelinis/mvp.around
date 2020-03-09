@@ -25,3 +25,12 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+ng generate component GroupDetail --changeDetection=OnPush --style=scss --module=/components/groups/groups.module.ts
+ng generate @ngrx/schematics:effect Group --root -m app.module.ts --flat false --group
+ng generate component ConfirmDialog --changeDetection=OnPush --style=scss
+ng generate component GroupItem --changeDetection=OnPush --style=scss --module=/components/groups/groups.module.ts
+ng generate component NewGroup --changeDetection=OnPush --style=scss --module=/components/groups/groups.module.ts
+ng generate @ngrx/schematics:entity Group --reducers reducers/index.ts --flat false
+ng generate module groups --route groups --module app.module
+ng generate @ngrx/schematics:entity Geolocation --reducers reducers/index.ts --flat false
