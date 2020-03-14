@@ -1,3 +1,6 @@
+2gis-maps
+SEE LICENSE IN FILE
+
 @angular-devkit/build-angular
 MIT
 The MIT License
@@ -115,6 +118,9 @@ MIT
 
 @angular/router
 MIT
+
+@microsoft/signalr
+Apache-2.0
 
 @ngrx/effects
 MIT
