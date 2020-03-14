@@ -12,4 +12,4 @@ export class UpdateGeolocation implements Action {
 }
 
 export type GeolocationActions =
-  UpdateGeolocation
+  UpdateGeolocation;

@@ -1,21 +1,22 @@
 <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <h4>Id: {{group.id}} (Label: {{group.label}})</h4>
+        <h3>{{group.label}}</h3>
       </mat-panel-title>
     </mat-expansion-panel-header>
+    <h4>Identifier of the group: {{group.id}}</h4>
     <mat-form-field>
       <input matInput [formControl]="label">
-      <mat-placeholder>Label</mat-placeholder>
+      <mat-placeholder>Group Label</mat-placeholder>
       <mat-error *ngIf="label.invalid">{{getLabelMessage()}}</mat-error>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field *ngIf="showPassword">
       <input matInput [formControl]="password">
       <mat-placeholder>Password</mat-placeholder>
     </mat-form-field>
     <mat-form-field>
       <input matInput [formControl]="userName">
-      <mat-placeholder>User Name</mat-placeholder>
+      <mat-placeholder>Nick Name</mat-placeholder>
       <mat-error *ngIf="userName.invalid">{{getUserNamedMessage()}}</mat-error>
     </mat-form-field>
     <div>

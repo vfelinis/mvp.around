@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { OidcFacade } from 'ng-oidc-client';
+
+import { GeolocationService } from 'src/app/services/geolocationService';
+import { Geolocation } from 'src/app/models/geolocation.model';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +11,21 @@ import { OidcFacade } from 'ng-oidc-client';
 })
 export class AppComponent implements OnInit {
   title = 'around';
+  geolocation: Geolocation;
 
-  constructor(private router: Router, private oidcFacade: OidcFacade) {}
+  constructor(private geolocationService: GeolocationService, private oidcFacade: OidcFacade) {
+    this.geolocationService.selectGeolocation().subscribe(s => this.geolocation = s);
+  }
 
    ngOnInit() {
     this.oidcFacade.getOidcUser();
+    this.checkGeolocation();
+   }
+
+   checkGeolocation() {
+    this.geolocationService.checkGeolocation();
+    setTimeout(() => {
+      this.checkGeolocation();
+    }, 10000);
    }
 }

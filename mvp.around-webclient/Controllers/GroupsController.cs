@@ -90,9 +90,9 @@ namespace mvp.around_webclient.Controllers
         }
 
         [HttpPost("api/groups/{id}/connect")]
-        public async Task<object> ConnectGroup(ConnectGroupRequest request)
+        public async Task<object> ConnectGroup(int id, [FromBody]ConnectGroupRequest request)
         {
-            if (request == null) return BadRequest("request is null");
+            if (request == null || request.Group?.Id != id) return BadRequest("request is null");
             try
             {
                 var response = await GrpcClient.ConnectGroupAsync(request, Headers);

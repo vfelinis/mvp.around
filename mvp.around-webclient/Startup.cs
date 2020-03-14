@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using mvp.around_webclient.Extensions;
+using mvp.around_webclient.Hubs;
 
 namespace mvp.around_webclient
 {
@@ -54,6 +55,8 @@ namespace mvp.around_webclient
                     policy.RequireClaim("spa");
                 });
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,6 +91,8 @@ namespace mvp.around_webclient
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+
+                endpoints.MapHub<GroupsHub>("/groupshub");
             });
 
             app.UseSpa(spa =>

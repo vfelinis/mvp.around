@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { NewGroupComponent } from './new-group/new-group.component';
 import { Group } from 'src/app/models/group.model';
 import { GroupService } from 'src/app/services/groupService';
+import { ConnectGroupComponent } from './connect-group/connect-group.component';
 
 @Component({
   selector: 'app-groups',
@@ -26,6 +27,10 @@ export class GroupsComponent implements OnInit {
 
   onCreate(): void {
     this.dialog.open(NewGroupComponent);
+  }
+
+  onConnect(): void {
+    this.dialog.open(ConnectGroupComponent);
   }
 
   onSave(group: Group): void {

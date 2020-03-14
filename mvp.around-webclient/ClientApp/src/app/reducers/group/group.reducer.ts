@@ -36,6 +36,10 @@ export function reducer(
       return adapter.updateOne(action.payload.group, state);
     }
 
+    case GroupActionTypes.ConnectGroup: {
+      return adapter.addOne(action.payload.group, state);
+    }
+
     case GroupActionTypes.DeleteGroup: {
       return adapter.removeOne(action.payload.id, state);
     }

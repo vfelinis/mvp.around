@@ -1,3 +1,30 @@
 <div id="primary-header" class="mat-h1">
-    <span>Id: {{(group$ | async)?.id}} (Label: {{(group$ | async)?.label}})</span>
+    <span>{{(group$ | async)?.label}}</span>
+</div>
+<a routerLink="/groups" class="min-margin" mat-raised-button color="primary">
+    <mat-icon>arrow_back_ios</mat-icon>
+    Back
+</a>
+<div fxLayout fxLayoutAlign="center">
+    <mat-card fxFlex.gt-xs="80%">
+        <mat-list>
+            <mat-list-item *ngFor="let user of users$ | async">
+                <div class="user-item" fxLayout fxLayoutAlign="start center">
+                    <mat-icon>person</mat-icon> {{user.userName}}
+                    <div fxLayout fxFlex="grow" fxLayoutAlign="end">
+                        <button mat-icon-button color="primary" (click)="onShowMap(user)">
+                            <mat-icon>my_location</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </mat-list-item>
+           </mat-list>
+    </mat-card>
+</div>
+<div class="map-container" [ngClass]="{'map-container--show':isMapShown}">
+    <button mat-raised-button color="primary" class="map-container__button" (click)="onCloseMap()">
+        Close
+        <mat-icon>arrow_forward_ios</mat-icon>
+    </button>
+    <div id="map"></div>
 </div>

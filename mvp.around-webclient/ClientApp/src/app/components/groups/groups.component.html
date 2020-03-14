@@ -2,10 +2,15 @@
     <span>Groups</span>
 </div>
 <div fxLayout fxLayoutAlign="center">
-    <mat-card fxFlex.gt-md="80%">
+    <mat-card fxFlex.gt-xs="80%">
         <div class="min-margin">
             <button (click)="onCreate()" mat-raised-button color="primary">
                 Create Group
+            </button>
+        </div>
+        <div class="min-margin">
+            <button (click)="onConnect()" mat-raised-button color="primary">
+                Connect Group
             </button>
         </div>
         <app-group-item *ngFor="let group of groups$ | async" [group]="group" (onSave)="onSave($event)" (onLeave)="onLeave($event)">

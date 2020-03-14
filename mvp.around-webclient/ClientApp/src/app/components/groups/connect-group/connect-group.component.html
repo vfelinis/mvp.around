@@ -1,10 +1,15 @@
 <h3 mat-dialog-title>
-    New Group
+    Connect Group
 </h3>
 <mat-dialog-content>
   <div fxLayout fxLayoutAlign="center">
     <div fxFlex="250px" fxFlex.gt-xs="350px" fxFlex.gt-sm="500px">
-      <form [formGroup]="createForm" (ngSubmit)="submit()" novalidate fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="stretch">
+      <form [formGroup]="connectForm" (ngSubmit)="submit()" novalidate fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="stretch">
+        <mat-form-field>
+            <input type="number" matInput [formControl]="id">
+            <mat-placeholder>Group Id</mat-placeholder>
+            <mat-error *ngIf="id.invalid">{{getIdMessage()}}</mat-error>
+          </mat-form-field>
         <mat-form-field>
           <input matInput [formControl]="label">
           <mat-placeholder>Group Label</mat-placeholder>
@@ -20,8 +25,8 @@
           <mat-error *ngIf="userName.invalid">{{getUserNamedMessage()}}</mat-error>
         </mat-form-field>
         <div>
-          <button class="min-margin" mat-raised-button color="primary" type="submit" [disabled]="createForm.invalid">
-            Save
+          <button class="min-margin" mat-raised-button color="primary" type="submit" [disabled]="connectForm.invalid">
+            Connect
           </button>
           <button class="min-margin" mat-raised-button mat-dialog-close color="warn">
             Cancel

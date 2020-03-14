@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, Input, Output
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Group } from 'src/app/models/group.model';
+import { Group, Role } from 'src/app/models/group.model';
 import { ConfirmDialogData, ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -20,12 +20,15 @@ export class GroupItemComponent implements OnInit {
   public password: FormControl;
   public userName: FormControl;
 
+  public showPassword: boolean;
+
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.label = new FormControl(this.group.label, [Validators.required]);
     this.password = new FormControl(this.group.password);
     this.userName = new FormControl(this.group.userName, [Validators.required]);
+    this.showPassword = this.group.userRole == Role.Owner;
   }
 
   getLabelMessage() {
