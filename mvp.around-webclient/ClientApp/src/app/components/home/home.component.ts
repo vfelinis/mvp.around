@@ -1,16 +1,10 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import DG from '2gis-maps';
-import { mapToMapExpression } from '@angular/compiler/src/render3/util';
 import { OidcFacade } from 'ng-oidc-client';
-import { User } from 'oidc-client';
-import { Store, select } from '@ngrx/store';
 
-import { AppState, selectGeolocation } from '../../reducers/index';
-import { UpdateGeolocation } from '../../actions/geolocation.actions';
 import { Geolocation } from '../../models/geolocation.model';
-
-import { checkGeolocation } from '../../helpers/geolocationHelper';
+import { GeolocationService } from 'src/app/services/geolocationService';
 
 @Component({
   selector: 'app-home',
@@ -29,15 +23,13 @@ export class HomeComponent implements OnInit {
   geolocation$: Observable<Geolocation>;
   loggedIn$: Observable<boolean>;
 
-  constructor(private store: Store<AppState>, private oidcFacade: OidcFacade) {
-    this.geolocation$ = store.pipe(select(selectGeolocation));
-    this.loggedIn$ = oidcFacade.loggedIn$;
-
-    this.updateGeolocation = this.updateGeolocation.bind(this);
+  constructor(private geolocationService: GeolocationService, private oidcFacade: OidcFacade) {
+    this.geolocation$ = this.geolocationService.selectGeolocation();
+    this.loggedIn$ = this.oidcFacade.loggedIn$;
    }
 
   ngOnInit() {
-    checkGeolocation(this.updateGeolocation);
+    this.geolocationService.checkGeolocation();
     // this.map = DG.map('map', {
     //   'center': [this.lat, this.lng],
     //   'zoom': 13
@@ -56,15 +48,6 @@ export class HomeComponent implements OnInit {
     // if (navigator.geolocation) {
     //   navigator.geolocation.getCurrentPosition((position) => this.getPosition(position));
     // }
-  }
-
-  updateGeolocation(isAvailable: boolean, lat: string = null, lng: string = null): void {
-    const geolocation: Geolocation = {
-      isAvailable: isAvailable,
-      lat: lat,
-      lng: lng
-    };
-    this.store.dispatch(new UpdateGeolocation(geolocation));
   }
 
   signinPopup(): void {

@@ -1,11 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
 
 import { Group, Role } from 'src/app/models/group.model';
-import { AppState } from 'src/app/reducers';
-import { AddGroup } from 'src/app/actions/group.actions';
+import { GroupService } from 'src/app/services/groupService';
 
 @Component({
   selector: 'app-new-group',
@@ -19,7 +17,7 @@ export class NewGroupComponent implements OnInit {
   public password: FormControl;
   public userName: FormControl;
 
-  constructor(private store: Store<AppState>,
+  constructor(private service: GroupService,
     private dialogRef: MatDialogRef<NewGroupComponent>
   ) {
     this.label = new FormControl('', [Validators.required]);
@@ -54,7 +52,7 @@ export class NewGroupComponent implements OnInit {
         userName: this.userName.value,
         userRole: Role.Owner
       };
-      this.store.dispatch(new AddGroup({group: newGroup}));
+      this.service.createGroup(newGroup);
       this.dialogRef.close();
     }
   }

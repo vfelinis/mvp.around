@@ -1,12 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
-import { AppState, selectGroups } from 'src/app/reducers';
 import { Group } from 'src/app/models/group.model';
-import { selectEntry } from 'src/app/reducers/group/group.reducer';
-import { LoadGroup } from 'src/app/actions/group.actions';
+import { GroupService } from 'src/app/services/groupService';
 
 @Component({
   selector: 'app-group-detail',
@@ -18,15 +15,12 @@ export class GroupDetailComponent implements OnInit {
 
   group$: Observable<Group>;
 
-  constructor(private store: Store<AppState>, private activateRoute: ActivatedRoute) {
-    this.group$ = store.pipe(
-      select(selectGroups),
-      select(selectEntry, +activateRoute.snapshot.params['id'])
-    );
+  constructor(private service: GroupService, private activatedRoute: ActivatedRoute) {
+    this.group$ = this.service.selectGroup(+activatedRoute.snapshot.params['id']);
   }
 
   ngOnInit(): void {
-    this.store.dispatch(new LoadGroup({id: +this.activateRoute.snapshot.params['id']}))
+    this.service.getGroup(+this.activatedRoute.snapshot.params['id']);
   }
 
 }

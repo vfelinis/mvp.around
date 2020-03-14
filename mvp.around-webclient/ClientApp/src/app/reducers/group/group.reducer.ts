@@ -20,23 +20,23 @@ export function reducer(
   action: GroupActions
 ): GroupsState {
   switch (action.type) {
-    case GroupActionTypes.LoadGroupsSuccess: {
+    case GroupActionTypes.LoadGroups: {
       return adapter.addAll(action.payload.groups, state);
     }
 
-    case GroupActionTypes.LoadGroupSuccess: {
+    case GroupActionTypes.LoadGroup: {
       return adapter.upsertOne(action.payload.group, state);
     }
 
-    case GroupActionTypes.AddGroupSuccess: {
+    case GroupActionTypes.AddGroup: {
       return adapter.addOne(action.payload.group, state);
     }
 
-    case GroupActionTypes.UpdateGroupSuccess: {
+    case GroupActionTypes.UpdateGroup: {
       return adapter.updateOne(action.payload.group, state);
     }
 
-    case GroupActionTypes.DeleteGroupSuccess: {
+    case GroupActionTypes.DeleteGroup: {
       return adapter.removeOne(action.payload.id, state);
     }
 

@@ -34,9 +34,10 @@ import { NavComponent } from './shared/components/nav/nav.component';
 import { ButtonComponent } from './shared/components/button/button.component';
 import { LinkComponent } from './shared/components/link/link.component';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
-import { GroupEffects } from './effects/group/group.effects';
 import { GroupService } from './services/groupService';
 import { OidcInterceptorService } from './interceptors/oidcInterceptorService';
+import { GeolocationService } from './services/geolocationService';
+import { OidcGuard } from './guards/oidc/oidc.guard';
 
 export const oidcConfigSettings: Config = {
   oidc_config: {
@@ -79,7 +80,7 @@ export const oidcConfigSettings: Config = {
       name: 'ng-oidc-client',
       logOnly: true
     }) : [],
-    EffectsModule.forRoot([GroupEffects]),
+    EffectsModule.forRoot([]),
     NgOidcClientModule.forRoot(oidcConfigSettings),
     BrowserAnimationsModule,
     FlexLayoutModule,
@@ -92,6 +93,8 @@ export const oidcConfigSettings: Config = {
   ],
   providers: [
     GroupService,
+    GeolocationService,
+    OidcGuard,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: OidcInterceptorService,

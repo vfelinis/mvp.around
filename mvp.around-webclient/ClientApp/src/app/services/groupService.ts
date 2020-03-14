@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { Store, select } from '@ngrx/store';
 
 import { Group } from '../models/group.model';
+import { AppState, selectGroups } from '../reducers';
+import { LoadGroups, LoadGroup, AddGroup, UpdateGroup, ConnectGroup, DeleteGroup, ClearGroups } from '../actions/group.actions';
+import { selectAll, selectEntry } from '../reducers/group/group.reducer';
 
 @Injectable({
   providedIn: 'root'
@@ -11,30 +16,72 @@ export class GroupService {
 
   private endpoint: string = '/api/groups';
 
-  constructor (private http: HttpClient) {}
+  selectGroups(): Observable<Group[]> {
+    return this.store.pipe(
+      select(selectGroups),
+      select(selectAll)
+    );
+  }
+
+  selectGroup(id: number): Observable<Group> {
+    return this.store.pipe(
+      select(selectGroups),
+      select(selectEntry, id)
+    );
+  }
+
+  constructor (private store: Store<AppState>, private http: HttpClient) {}
 
   getGroups() {
-    return this.http.get<GetGroupsResponse>(this.endpoint);
+    this.store.dispatch(new ClearGroups());
+    this.http.get<GetGroupsResponse>(this.endpoint).subscribe(
+      response => this.store.dispatch(new LoadGroups({groups: response.groups})),
+      error => console.log(error)
+    );
   }
 
-  createGroup(request: GreateGroupRequest) {
-    return this.http.post<GreateGroupResponse>(this.endpoint, request);
+  createGroup(group: Group) {
+    const request: GreateGroupRequest = {
+      group: group
+    };
+    this.http.post<GreateGroupResponse>(this.endpoint, request).subscribe(
+      response => this.store.dispatch(new AddGroup({group: {...group, id: response.id}})),
+      error => console.log(error)
+    );
   }
 
-  GetGroup(id: number) {
-    return this.http.get<GetGroupResponse>(`${this.endpoint}/${id}`);
+  getGroup(id: number) {
+    this.http.get<GetGroupResponse>(`${this.endpoint}/${id}`).subscribe(
+      response => this.store.dispatch(new LoadGroup({group: response.group})),
+      error => console.log(error)
+    );
   }
 
-  UpdateGroup(request: UpdateGroupRequest) {
-    return this.http.put<UpdateGroupResponse>(`${this.endpoint}/${request.group.id}`, request);
+  updateGroup(group: Group) {
+    const request: UpdateGroupRequest = {
+      group: group
+    };
+    this.http.put<UpdateGroupResponse>(`${this.endpoint}/${request.group.id}`, request).subscribe(
+      response => this.store.dispatch(new UpdateGroup({group: { id: group.id, changes: group }})),
+      error => console.log(error)
+    );
   }
 
-  ConnectGroup(request: ConnectGroupRequest) {
-    return this.http.post<ConnectGroupResponse>(`${this.endpoint}/${request.group.id}/connect`, request);
+  connectGroup(group: Group) {
+    const request: ConnectGroupRequest = {
+      group: group
+    };
+    this.http.post<ConnectGroupResponse>(`${this.endpoint}/${request.group.id}/connect`, request).subscribe(
+      response => this.store.dispatch(new ConnectGroup({group: group})),
+      error => console.log(error)
+    );
   }
 
-  LeaveGroup(id: number) {
-    return this.http.delete<LeaveGroupResponse>(`${this.endpoint}/${id}`);
+  leaveGroup(id: number) {
+    this.http.delete<LeaveGroupResponse>(`${this.endpoint}/${id}`).subscribe(
+      response => this.store.dispatch(new DeleteGroup({id: id})),
+      error => console.log(error)
+    );
   }
 }
 
