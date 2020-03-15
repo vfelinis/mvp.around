@@ -11,12 +11,13 @@ namespace mvp.around_webclient.Hubs
         public async Task JoinHub(GroupsHubMessage message)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, message.GroupId.ToString());
-            await Clients.Client(Context.ConnectionId).SendAsync("Send", message);
+            await Clients.Group(message.GroupId.ToString()).SendAsync("JoinHub", message);
         }
 
-        public Task LeaveHub(GroupsHubMessage message)
+        public async Task LeaveHub(GroupsHubMessage message)
         {
-            return Groups.RemoveFromGroupAsync(Context.ConnectionId, message.GroupId.ToString());
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, message.GroupId.ToString());
+            await Clients.Group(message.GroupId.ToString()).SendAsync("LeaveHub", message);
         }
 
         public Task Send(GroupsHubMessage message)

@@ -20,17 +20,17 @@ export function reducer(
   switch (action.type) {
     case UserActionTypes.UpsertUser: {
       return {...state,
-         users: [
-           ...state.users.filter(s => s.groupId !== action.payload.user.groupId && s.userName !== action.payload.user.userName),
-           action.payload.user
-          ]
-        };
+        users: [
+          ...state.users.filter(s => !(s.groupId === action.payload.user.groupId && s.userName === action.payload.user.userName)),
+          action.payload.user
+         ]
+       };
     }
 
     case UserActionTypes.DeleteUser: {
       return {...state,
          users: [
-           ...state.users.filter(s => s.groupId !== action.payload.user.groupId && s.userName !== action.payload.user.userName)
+           ...state.users.filter(s => !(s.groupId === action.payload.user.groupId && s.userName === action.payload.user.userName))
           ]
         };
     }
