@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import DG from '2gis-maps';
+import * as workerTimers from 'worker-timers';
 
 import { Group } from 'src/app/models/group.model';
 import { GroupService } from 'src/app/services/groupService';
@@ -55,7 +56,7 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
     this.groupService.getGroup(+this.activatedRoute.snapshot.params['id']);
     this.sendHubMessage();
     this.map = DG.map('map', {
-      'zoom': 20,
+      'zoom': 15,
       'fullscreenControl': false
     });
     this.marker.addTo(this.map);
@@ -93,7 +94,6 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-    clearTimeout(this.timer);
     if (this.group) {
       const user: User = {
         groupId: this.group.id,
@@ -102,6 +102,9 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
         lng: this.geolocation.lng
       }
       this.groupService.leaveHub(user);
+    }
+    if (this.timer) {
+      workerTimers.clearTimeout(this.timer);
     }
   }
 
@@ -116,11 +119,11 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
       if (!this.users.length) {
         this.groupService.joinHub(user);
       } else {
-        this.timeout = 30000;
+        this.timeout = 15000;
         this.groupService.sendHubMessage(user);
       }
     }
-    this.timer = setTimeout(() => {
+    this.timer = workerTimers.setTimeout(() => {
       this.sendHubMessage();
     }, this.timeout);
   }
