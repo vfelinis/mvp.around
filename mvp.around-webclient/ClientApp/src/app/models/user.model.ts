@@ -3,4 +3,5 @@ export interface User {
     userName: string;
     lat: number;
     lng: number;
+    isGeolocationAvailable: boolean;
   }

@@ -89,7 +89,7 @@ export const oidcConfigSettings: Config = {
     MatIconModule,
     MatToolbarModule,
     MatDialogModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     GroupService,

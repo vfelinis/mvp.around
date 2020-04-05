@@ -1,3 +1,4 @@
+import { Loader } from './../models/loader.model';
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -8,12 +9,13 @@ import * as signalR from "@microsoft/signalr";
 import { HubConnection } from '@microsoft/signalr';
 
 import { Group } from '../models/group.model';
-import { AppState, selectGroups, selectUsers } from '../reducers';
+import { AppState, selectGroups, selectUsers, selectLoader } from '../reducers';
 import { LoadGroups, LoadGroup, AddGroup, UpdateGroup, ConnectGroup, DeleteGroup, ClearGroups } from '../actions/group.actions';
 import { selectAll, selectEntry } from '../reducers/group/group.reducer';
 import { UpsertUser, DeleteUser, ClearUsers } from '../actions/user.actions';
 import { User } from '../models/user.model';
 import { selectUsersForGroup } from '../reducers/user/user.reducer';
+import { UpdateLoader } from '../actions/loader.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,7 @@ export class GroupService {
   private apiEndpoint: string = '/api/groups';
   private hubEndpoint: string = '/groupshub';
   private hubConnection: HubConnection | undefined;
+  private user: User;
 
   selectGroups(): Observable<Group[]> {
     return this.store.pipe(
@@ -49,12 +52,23 @@ export class GroupService {
     );
   }
 
+  selectLoader(): Observable<Loader> {
+    return this.store.pipe(select(selectLoader));
+  }
+
   getGroups() {
     this.store.dispatch(new ClearGroups());
     this.store.dispatch(new ClearUsers());
+    this.store.dispatch(new UpdateLoader({isLoading: true}));
     this.http.get<GetGroupsResponse>(this.apiEndpoint).subscribe(
-      response => this.store.dispatch(new LoadGroups({groups: response.groups})),
-      error => console.log(error)
+      response => {
+        this.store.dispatch(new UpdateLoader({isLoading: false}));
+        this.store.dispatch(new LoadGroups({groups: response.groups}));
+      },
+      error => {
+        this.store.dispatch(new UpdateLoader({isLoading: false}));
+        console.log(error);
+      }
     );
   }
 
@@ -115,18 +129,21 @@ export class GroupService {
   }
 
   sendHubMessage(message: User): void {
+    this.user = message;
     if (this.hubConnection) {
         this.hubConnection.invoke('Send', message);
     }
   }
 
   joinHub(message: User): void {
+    this.user = message;
     if (this.hubConnection) {
         this.hubConnection.invoke('JoinHub', message);
     }
   }
 
   leaveHub(message: User): void {
+    this.user = message;
     if (this.hubConnection) {
         this.hubConnection.invoke('LeaveHub', message);
     }
@@ -135,6 +152,7 @@ export class GroupService {
   private initHub() {
     this.hubConnection = new signalR.HubConnectionBuilder()
         .withUrl(this.hubEndpoint)
+        .withAutomaticReconnect()
         .configureLogging(signalR.LogLevel.Information)
         .build();
 

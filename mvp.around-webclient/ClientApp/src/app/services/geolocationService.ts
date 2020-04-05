@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, EMPTY } from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { Router } from '@angular/router';
 
 import { AppState, selectGeolocation } from '../reducers';
 import { Geolocation } from '../models/geolocation.model';
@@ -16,7 +15,7 @@ export class GeolocationService {
     return this.store.pipe(select(selectGeolocation));
   }
 
-  constructor (private store: Store<AppState>, private router: Router) {
+  constructor (private store: Store<AppState>) {
 
     this.updateGeolocation = this.updateGeolocation.bind(this);
   }
@@ -28,9 +27,6 @@ export class GeolocationService {
       lng: lng
     };
     this.store.dispatch(new UpdateGeolocation(geolocation));
-    if (!geolocation.isAvailable) {
-      this.router.navigate(['/']);
-    }
   }
 
   checkGeolocation(): void {

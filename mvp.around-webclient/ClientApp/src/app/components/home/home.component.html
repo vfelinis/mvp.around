@@ -15,7 +15,7 @@
       </button>
     </mat-card>
   </div>
-  <div *ngIf="(geolocation$ | async) && (loggedIn$ | async)">
+  <div *ngIf="(loggedIn$ | async)">
     <mat-card>
       <div class="mat-h2">Welcome!</div>
       <a routerLink="/groups" mat-raised-button color="primary">

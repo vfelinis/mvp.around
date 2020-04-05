@@ -13,6 +13,7 @@
                 Connect Group
             </button>
         </div>
+        <mat-spinner *ngIf="(loader$ | async).isLoading"></mat-spinner>
         <app-group-item *ngFor="let group of groups$ | async" [group]="group" (onSave)="onSave($event)" (onLeave)="onLeave($event)">
         </app-group-item>
     </mat-card>

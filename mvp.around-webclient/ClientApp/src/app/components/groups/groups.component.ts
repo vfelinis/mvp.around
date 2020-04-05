@@ -6,6 +6,7 @@ import { NewGroupComponent } from './new-group/new-group.component';
 import { Group } from 'src/app/models/group.model';
 import { GroupService } from 'src/app/services/groupService';
 import { ConnectGroupComponent } from './connect-group/connect-group.component';
+import { Loader } from 'src/app/models/loader.model';
 
 @Component({
   selector: 'app-groups',
@@ -16,9 +17,11 @@ import { ConnectGroupComponent } from './connect-group/connect-group.component';
 export class GroupsComponent implements OnInit {
 
   groups$: Observable<Group[]>;
+  loader$: Observable<Loader>;
 
   constructor(private service: GroupService, private dialog: MatDialog) {
     this.groups$ = this.service.selectGroups();
+    this.loader$ = this.service.selectLoader();
   }
 
   ngOnInit(): void {

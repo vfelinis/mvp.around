@@ -19,6 +19,9 @@ import { Geolocation } from 'src/app/models/geolocation.model';
 })
 export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
+  private markerTimer: any;
+  private selectedUser: User;
+
   group$: Observable<Group>;
   group: Group;
   users$: Observable<User[]>;
@@ -33,23 +36,25 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
   constructor(private groupService: GroupService, private geolocationService: GeolocationService,
      private activatedRoute: ActivatedRoute)
   {
-    this.group$ = this.groupService.selectGroup(+activatedRoute.snapshot.params['id']);
-    this.group$.pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(s => {
-        this.group = s;
-      });
+      this.group$ = this.groupService.selectGroup(+activatedRoute.snapshot.params['id']);
+      this.group$.pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(s => {
+          this.group = s;
+        });
 
-    this.users$ = this.groupService.selectUsers(+activatedRoute.snapshot.params['id']);
-    this.users$.pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(s => {
-        this.users = s;
-      });
+      this.users$ = this.groupService.selectUsers(+activatedRoute.snapshot.params['id']);
+      this.users$.pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(s => {
+          this.users = s;
+        });
 
-    this.geolocationService.selectGeolocation()
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(s => {
-        this.geolocation = s;
-      });
+      this.geolocationService.selectGeolocation()
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(s => {
+          this.geolocation = s;
+        });
+
+      this.updateMarker = this.updateMarker.bind(this);
   }
 
   ngOnInit(): void {
@@ -99,12 +104,17 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
         groupId: this.group.id,
         userName: this.group.userName,
         lat: this.geolocation.lat,
-        lng: this.geolocation.lng
+        lng: this.geolocation.lng,
+        isGeolocationAvailable: this.geolocation.isAvailable
       }
       this.groupService.leaveHub(user);
     }
     if (this.timer) {
       workerTimers.clearTimeout(this.timer);
+    }
+
+    if (this.markerTimer) {
+      clearTimeout(this.markerTimer);
     }
   }
 
@@ -114,7 +124,8 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
         groupId: this.group.id,
         userName: this.group.userName,
         lat: this.geolocation.lat,
-        lng: this.geolocation.lng
+        lng: this.geolocation.lng,
+        isGeolocationAvailable: this.geolocation.isAvailable
       }
       if (!this.users.length) {
         this.groupService.joinHub(user);
@@ -129,13 +140,28 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   onShowMap(user: User) {
+    this.selectedUser = user;
     this.isMapShown = true;
-    this.marker.setLatLng([user.lat, user.lng]);
     this.map.setView([user.lat, user.lng]);
+    this.updateMarker();
   }
 
   onCloseMap() {
+    this.selectedUser = null;
     this.isMapShown = false;
+    if (this.markerTimer) {
+      clearTimeout(this.markerTimer);
+    }
+  }
+
+  updateMarker() {
+    var user = this.users.find(u => u.userName === this.selectedUser?.userName);
+    if (user) {
+      this.marker.setLatLng([user.lat, user.lng]);
+      this.markerTimer = setTimeout(() => {
+        this.updateMarker();
+      }, 5000);
+    }
   }
 
 }

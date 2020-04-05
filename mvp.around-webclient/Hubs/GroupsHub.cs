@@ -32,5 +32,6 @@ namespace mvp.around_webclient.Hubs
         public string UserName { get; set; }
         public double Lat { get; set; }
         public double Lng { get; set; }
+        public bool IsGeolocationAvailable { get; set; }
     }
 }
