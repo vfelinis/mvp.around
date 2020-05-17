@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { OidcFacade } from 'ng-oidc-client';
 import { take, switchMap } from 'rxjs/operators';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OidcGuard implements CanActivate {
 
-  constructor(private router: Router, private oidcFacade: OidcFacade) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      return this.oidcFacade.identity$.pipe(
+      return this.authService.getUser().pipe(
         take(1),
         switchMap(user => {
           console.log('Auth Guard - Checking if user exists', user);
@@ -22,7 +22,7 @@ export class OidcGuard implements CanActivate {
           if (user && !user.expired) {
             return of(true);
           } else {
-            this.router.navigate(['/']);
+            this.authService.signoutPopup(false);
             return of(false);
           }
         })

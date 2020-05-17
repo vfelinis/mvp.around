@@ -1,8 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from 'oidc-client';
-import { OidcFacade } from 'ng-oidc-client';
-import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-nav',
@@ -14,20 +12,19 @@ export class NavComponent implements OnInit {
 
   loggedIn$: Observable<boolean>;
 
-  constructor(private oidcFacade: OidcFacade, private router: Router) {
-    this.loggedIn$ = oidcFacade.loggedIn$;
+  constructor(private authService: AuthService) {
+    this.loggedIn$ = this.authService.selectloggedIn();
    }
 
   ngOnInit(): void {
   }
 
   signinPopup(): void {
-    this.oidcFacade.signinPopup();
+    this.authService.signinPopup();
   }
 
   signoutPopup(): void {
-    this.oidcFacade.signoutPopup();
-    this.router.navigate(['/']);
+    this.authService.signoutPopup();
   }
 
 }

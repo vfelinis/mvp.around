@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { OidcFacade } from 'ng-oidc-client';
 
 import { GeolocationService } from 'src/app/services/geolocationService';
 import { Geolocation } from 'src/app/models/geolocation.model';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,19 +13,19 @@ export class AppComponent implements OnInit {
   title = 'around';
   geolocation: Geolocation;
 
-  constructor(private geolocationService: GeolocationService, private oidcFacade: OidcFacade) {
+  constructor(private geolocationService: GeolocationService, private authService: AuthService) {
+    this.authService.init();
     this.geolocationService.selectGeolocation().subscribe(s => this.geolocation = s);
   }
 
-   ngOnInit() {
-    this.oidcFacade.getOidcUser();
+  ngOnInit() {
     this.checkGeolocation();
-   }
+  }
 
-   checkGeolocation() {
+  checkGeolocation() {
     this.geolocationService.checkGeolocation();
     setTimeout(() => {
       this.checkGeolocation();
     }, 10000);
-   }
+  }
 }

@@ -2,9 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { NgOidcClientModule, Config } from 'ng-oidc-client';
-import { WebStorageStateStore, Log } from 'oidc-client';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -29,7 +26,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { reducers, metaReducers } from './reducers';
 
-import { environment } from '../environments/environment';
 import { NavComponent } from './shared/components/nav/nav.component';
 import { ButtonComponent } from './shared/components/button/button.component';
 import { LinkComponent } from './shared/components/link/link.component';
@@ -38,25 +34,7 @@ import { GroupService } from './services/groupService';
 import { OidcInterceptorService } from './interceptors/oidcInterceptorService';
 import { GeolocationService } from './services/geolocationService';
 import { OidcGuard } from './guards/oidc/oidc.guard';
-
-export const oidcConfigSettings: Config = {
-  oidc_config: {
-    authority: !environment.production ? 'https://localhost:5001' : 'https://identity.mvp-stack.com',
-    client_id: 'around-client',
-    redirect_uri: !environment.production ? 'https://localhost:5003/callback.html' : 'https://mvp-stack.com/callback.html',
-    response_type: 'code',
-    scope: 'openid offline_access api spa',
-    post_logout_redirect_uri: !environment.production ? 'https://localhost:5003/signout-callback.html' : 'https://mvp-stack.com/signout-callback.html',
-    silent_redirect_uri: !environment.production ? 'https://localhost:5003/renew-callback.html' : 'https://mvp-stack.com/renew-callback.html',
-    accessTokenExpiringNotificationTime: 10,
-    automaticSilentRenew: true,
-    userStore: new WebStorageStateStore({ store: window.localStorage })
-  },
-  log: {
-    logger: console,
-    level: Log.NONE
-  }
-};
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -76,12 +54,7 @@ export const oidcConfigSettings: Config = {
       }
     }),
     AppRoutingModule,
-    !environment.production ? StoreDevtoolsModule.instrument({
-      name: 'ng-oidc-client',
-      logOnly: true
-    }) : [],
     EffectsModule.forRoot([]),
-    NgOidcClientModule.forRoot(oidcConfigSettings),
     BrowserAnimationsModule,
     FlexLayoutModule,
     MatMenuModule,
@@ -92,6 +65,7 @@ export const oidcConfigSettings: Config = {
     HttpClientModule,
   ],
   providers: [
+    AuthService,
     GroupService,
     GeolocationService,
     OidcGuard,
