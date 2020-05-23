@@ -45,10 +45,10 @@ export class GroupService {
     );
   }
 
-  selectUsers(groupId: number): Observable<User[]> {
+  selectUsers(groupId: number, interval: number): Observable<User[]> {
     return this.store.pipe(
       select(selectUsers),
-      select(selectUsersForGroup, groupId)
+      select(selectUsersForGroup, {groupId: groupId, interval: interval})
     );
   }
 
@@ -159,14 +159,17 @@ export class GroupService {
     this.hubConnection.start().catch(err => console.error(err.toString()));
 
     this.hubConnection.on('Send', (message: User) => {
-        this.store.dispatch(new UpsertUser({user: message}));
+      message.lastUpdate = new Date();
+      this.store.dispatch(new UpsertUser({user: message}));
     });
 
     this.hubConnection.on('JoinHub', (message: User) => {
+      message.lastUpdate = new Date();
       this.store.dispatch(new UpsertUser({user: message}));
     });
 
     this.hubConnection.on('LeaveHub', (message: User) => {
+      message.lastUpdate = new Date();
       this.store.dispatch(new DeleteUser({user: message}));
     });
   }

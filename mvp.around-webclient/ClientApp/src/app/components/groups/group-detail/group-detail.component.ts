@@ -20,7 +20,6 @@ import { Geolocation } from 'src/app/models/geolocation.model';
 export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   private markerTimer: any;
-  private selectedUser: User;
 
   group$: Observable<Group>;
   group: Group;
@@ -30,7 +29,7 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
   timer: any;
   timeout: number = 1000;
   map: any;
-  marker: any = DG.marker([0, 0]);
+  markers: any = {};
   isMapShown: boolean;
 
   constructor(private groupService: GroupService, private geolocationService: GeolocationService,
@@ -42,7 +41,7 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
           this.group = s;
         });
 
-      this.users$ = this.groupService.selectUsers(+activatedRoute.snapshot.params['id']);
+      this.users$ = this.groupService.selectUsers(+activatedRoute.snapshot.params['id'], 30);
       this.users$.pipe(takeUntil(this.ngUnsubscribe))
         .subscribe(s => {
           this.users = s;
@@ -54,7 +53,7 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
           this.geolocation = s;
         });
 
-      this.updateMarker = this.updateMarker.bind(this);
+      this.updateMarkers = this.updateMarkers.bind(this);
   }
 
   ngOnInit(): void {
@@ -64,7 +63,7 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
       'zoom': 15,
       'fullscreenControl': false
     });
-    this.marker.addTo(this.map);
+    //this.marker.addTo(this.map);
     // this.map.locate({setView: true, watch: true})
     //     .on('locationfound', (e) => {
     //       this.marker.setLatLng([e.latitude, e.longitude]);
@@ -139,29 +138,47 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
     }, this.timeout);
   }
 
-  onShowMap(user: User) {
-    this.selectedUser = user;
+  onShowAllUsersOnMap() {
+    this.isMapShown = true;
+    this.map.setView([this.geolocation.lat, this.geolocation.lng]);
+    this.updateMarkers(this.users);
+  }
+
+  onShowUserOnMap(user: User) {
     this.isMapShown = true;
     this.map.setView([user.lat, user.lng]);
-    this.updateMarker();
+    this.updateMarkers([user]);
   }
 
   onCloseMap() {
-    this.selectedUser = null;
     this.isMapShown = false;
     if (this.markerTimer) {
       clearTimeout(this.markerTimer);
     }
   }
 
-  updateMarker() {
-    var user = this.users.find(u => u.userName === this.selectedUser?.userName);
-    if (user) {
-      this.marker.setLatLng([user.lat, user.lng]);
-      this.markerTimer = setTimeout(() => {
-        this.updateMarker();
-      }, 5000);
-    }
+  updateMarkers(users: User[]) {
+    let actualMarkers = users.map(u => u.userName);
+    let previousMarkers = Object.keys(this.markers);
+    let markersToDelete = previousMarkers.filter(x => !actualMarkers.includes(x));
+    markersToDelete.forEach(key => {
+      this.markers[key].removeFrom(this.map);
+      delete this.markers[key];
+    });
+    users.forEach(user => {
+      if (user.isGeolocationAvailable) {
+        if (!previousMarkers.includes(user.userName)) {
+          this.markers[user.userName] = DG.marker([user.lat, user.lng]);
+          this.markers[user.userName].addTo(this.map);
+        } else {
+          this.markers[user.userName].setLatLng([user.lat, user.lng]);
+        }
+      }
+    });
+
+    this.markerTimer = setTimeout(() => {
+      this.updateMarkers(users);
+    }, 5000);
   }
 
 }

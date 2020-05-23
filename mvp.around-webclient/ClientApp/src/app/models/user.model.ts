@@ -4,4 +4,5 @@ export interface User {
     lat: number;
     lng: number;
     isGeolocationAvailable: boolean;
+    lastUpdate?: Date;
   }

@@ -7,13 +7,16 @@
 </a>
 <div fxLayout fxLayoutAlign="center">
     <mat-card fxFlex="80%" fxFlex.xs="100%">
+        <button mat-raised-button color="primary" (click)="onShowAllUsersOnMap()">
+            Show everyone
+        </button>
         <mat-spinner *ngIf="!(users$ | async).length"></mat-spinner>
         <mat-list>
             <mat-list-item *ngFor="let user of users$ | async">
                 <div class="user-item" fxLayout fxLayoutAlign="start center">
                     <mat-icon>person</mat-icon> {{user.userName}}
                     <div fxLayout fxFlex="grow" fxLayoutAlign="end">
-                        <button [disabled]="!user.isGeolocationAvailable" mat-icon-button color="primary" (click)="onShowMap(user)">
+                        <button [disabled]="!user.isGeolocationAvailable" mat-icon-button color="primary" (click)="onShowUserOnMap(user)">
                             <mat-icon>my_location</mat-icon>
                         </button>
                     </div>
