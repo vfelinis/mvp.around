@@ -8,6 +8,7 @@
 <div fxLayout fxLayoutAlign="center">
     <mat-card fxFlex="80%" fxFlex.xs="100%">
         <button mat-raised-button color="primary" (click)="onShowAllUsersOnMap()">
+            <mat-icon>language</mat-icon>
             Show everyone
         </button>
         <mat-spinner *ngIf="!(users$ | async).length"></mat-spinner>

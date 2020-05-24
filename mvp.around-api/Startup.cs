@@ -32,7 +32,7 @@ namespace mvp.around_api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlite(Configuration.GetConnectionString("SQLiteConnection")));
 
             services.AddGrpc();
 

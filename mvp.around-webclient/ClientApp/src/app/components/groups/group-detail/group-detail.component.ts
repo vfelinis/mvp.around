@@ -168,8 +168,8 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
     users.forEach(user => {
       if (user.isGeolocationAvailable) {
         if (!previousMarkers.includes(user.userName)) {
-          this.markers[user.userName] = DG.marker([user.lat, user.lng]);
-          this.markers[user.userName].addTo(this.map);
+          this.markers[user.userName] = DG.marker([user.lat, user.lng], {title: user.userName});
+          this.markers[user.userName].addTo(this.map).bindPopup(`User name: ${user.userName}`);
         } else {
           this.markers[user.userName].setLatLng([user.lat, user.lng]);
         }
