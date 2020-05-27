@@ -19,6 +19,20 @@
           <mat-placeholder>Nick Name</mat-placeholder>
           <mat-error *ngIf="userName.invalid">{{getUserNamedMessage()}}</mat-error>
         </mat-form-field>
+        <mat-form-field>
+          <mat-select [formControl]="userIcon">
+            <mat-select-trigger>
+              <div class="icon-option">
+                <img *ngIf="userIcon.value" src="/icons/{{userIcon.value}}.svg" alt="{{userIcon.value}}">
+              </div>
+            </mat-select-trigger>
+            <mat-option class="icon-option" *ngFor="let icon of icons" [value]="icon">
+              <img src="/icons/{{icon}}.svg" alt="icon">
+            </mat-option>
+          </mat-select>
+          <mat-placeholder>User Icon</mat-placeholder>
+          <mat-error *ngIf="userIcon.invalid">{{getIconMessage()}}</mat-error>
+        </mat-form-field>
         <div>
           <button class="min-margin" mat-raised-button color="primary" type="submit" [disabled]="createForm.invalid">
             Save

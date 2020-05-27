@@ -4,6 +4,7 @@ export interface Group {
   password: string;
   userName: string;
   userRole: Role;
+  userIcon: string;
 }
 
 export enum Role {

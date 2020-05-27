@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { Group, Role } from 'src/app/models/group.model';
 import { ConfirmDialogData, ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { getIconNames } from 'src/app/utils/icons';
 
 @Component({
   selector: 'app-group-item',
@@ -19,6 +20,9 @@ export class GroupItemComponent implements OnInit {
   public label: FormControl;
   public password: FormControl;
   public userName: FormControl;
+  public userIcon: FormControl;
+
+  public icons: string[] = getIconNames();
 
   public showPassword: boolean;
 
@@ -28,6 +32,7 @@ export class GroupItemComponent implements OnInit {
     this.label = new FormControl(this.group.label, [Validators.required]);
     this.password = new FormControl(this.group.password);
     this.userName = new FormControl(this.group.userName, [Validators.required]);
+    this.userIcon = new FormControl(this.group.userIcon, [Validators.required]);
     this.showPassword = this.group.userRole == Role.Owner;
   }
 
@@ -41,20 +46,26 @@ export class GroupItemComponent implements OnInit {
             : '';
   }
 
+  getIconMessage() {
+    return this.userIcon.hasError('required') ? 'You must select an icon' : '';
+  }
+
   notNeedSave() {
     return this.group.label === this.label.value
       && this.group.password === this.password.value
-      && this.group.userName === this.userName.value;
+      && this.group.userName === this.userName.value
+      && this.group.userIcon === this.userIcon.value;
   }
 
   save(): void {
-    if (!this.label.invalid && !this.userName.invalid) {
+    if (!this.label.invalid && !this.userName.invalid && !this.userIcon.invalid) {
       const updatedGroup: Group = {
         id: this.group.id,
         label: this.label.value,
         password: this.password.value,
         userName: this.userName.value,
-        userRole: this.group.userRole
+        userRole: this.group.userRole,
+        userIcon: this.userIcon.value
       };
       this.onSave.emit(updatedGroup);
     }
