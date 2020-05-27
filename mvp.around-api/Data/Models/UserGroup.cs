@@ -12,6 +12,7 @@ namespace mvp.around_api.Data.Models
         public string GroupLabel { get; set; }
         public string UserName { get; set; }
         public UserRole UserRole { get; set; }
+        public string UserIcon { get; set; }
         public DateTime DTU { get; set; } = DateTime.UtcNow;
         public DateTime DTC { get; set; } = DateTime.UtcNow;
 

@@ -41,7 +41,8 @@ namespace mvp.around_api.Services
                             Label = s.GroupLabel,
                             Password = s.UserRole == UserRole.Owner ? s.Group.Password : string.Empty,
                             UserName = s.UserName,
-                            UserRole = (int)s.UserRole
+                            UserRole = (int)s.UserRole,
+                            UserIcon = s.UserIcon
                         }));
                     }
                 }
@@ -78,7 +79,8 @@ namespace mvp.around_api.Services
                             Label = userGroup.GroupLabel,
                             Password = userGroup.UserRole == UserRole.Owner ? userGroup.Group.Password : string.Empty,
                             UserName = userGroup.UserName,
-                            UserRole = (int)userGroup.UserRole
+                            UserRole = (int)userGroup.UserRole,
+                            UserIcon = userGroup.UserIcon
                         };
                     }
                     else
@@ -138,6 +140,7 @@ namespace mvp.around_api.Services
                             GroupLabel = request.Group.Label,
                             UserName = request.Group.UserName,
                             UserRole = UserRole.Owner,
+                            UserIcon = request.Group.UserIcon,
                             User = user
                         }
                     }
@@ -183,6 +186,7 @@ namespace mvp.around_api.Services
                         {
                             userGroup.Group.Password = request.Group.Password;
                         }
+                        userGroup.UserIcon = request.Group.UserIcon;
                         await _groupStore.SaveChanges();
                     }
                     else
@@ -253,6 +257,7 @@ namespace mvp.around_api.Services
                             GroupLabel = request.Group.Label,
                             UserName = request.Group.UserName,
                             UserRole = UserRole.User,
+                            UserIcon = request.Group.UserIcon,
                             Group = group
                         };
                         await _groupStore.AddUserGroup(userGroup);

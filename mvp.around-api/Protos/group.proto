@@ -81,4 +81,5 @@ message GroupDto {
     string Password = 3;
     string UserName = 4;
     int32 UserRole = 5;
+    string UserIcon = 6;
 }

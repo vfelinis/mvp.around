@@ -20,6 +20,7 @@ import { Geolocation } from 'src/app/models/geolocation.model';
 export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
   private markerTimer: any;
+  private selectedUser: User;
 
   group$: Observable<Group>;
   group: Group;
@@ -104,7 +105,8 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
         userName: this.group.userName,
         lat: this.geolocation.lat,
         lng: this.geolocation.lng,
-        isGeolocationAvailable: this.geolocation.isAvailable
+        isGeolocationAvailable: this.geolocation.isAvailable,
+        userIcon: this.group.userIcon
       }
       this.groupService.leaveHub(user);
     }
@@ -124,7 +126,8 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
         userName: this.group.userName,
         lat: this.geolocation.lat,
         lng: this.geolocation.lng,
-        isGeolocationAvailable: this.geolocation.isAvailable
+        isGeolocationAvailable: this.geolocation.isAvailable,
+        userIcon: this.group.userIcon
       }
       if (!this.users.length) {
         this.groupService.joinHub(user);
@@ -141,23 +144,26 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
   onShowAllUsersOnMap() {
     this.isMapShown = true;
     this.map.setView([this.geolocation.lat, this.geolocation.lng]);
-    this.updateMarkers(this.users);
+    this.updateMarkers(false);
   }
 
   onShowUserOnMap(user: User) {
     this.isMapShown = true;
+    this.selectedUser = user;
     this.map.setView([user.lat, user.lng]);
-    this.updateMarkers([user]);
+    this.updateMarkers(true);
   }
 
   onCloseMap() {
     this.isMapShown = false;
+    this.selectedUser = null;
     if (this.markerTimer) {
       clearTimeout(this.markerTimer);
     }
   }
 
-  updateMarkers(users: User[]) {
+  updateMarkers(onlySelected: boolean) {
+    let users = this.users.filter(x => !onlySelected || x.userName === this.selectedUser?.userName);
     let actualMarkers = users.map(u => u.userName);
     let previousMarkers = Object.keys(this.markers);
     let markersToDelete = previousMarkers.filter(x => !actualMarkers.includes(x));
@@ -168,13 +174,18 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
     users.forEach(user => {
       if (user.isGeolocationAvailable) {
         if (!previousMarkers.includes(user.userName)) {
-          let icon = DG.icon({
+          let options: any = {
+            title: user.userName
+          };
+          if (user.userIcon) {
+            options.icon = DG.icon({
               iconSize: [50, 50],
               className: 'icon',
-              iconUrl: '/icons/animal-bat.svg',
-          });
-          this.markers[user.userName] = DG.marker([user.lat, user.lng], {title: user.userName, icon: icon});
-          this.markers[user.userName].addTo(this.map).bindPopup(`User name: ${user.userName}`);
+              iconUrl: `/icons/${user.userIcon}.svg`,
+            });
+          }
+          this.markers[user.userName] = DG.marker([user.lat, user.lng], options);
+          this.markers[user.userName].addTo(this.map).bindPopup(`Nick name: ${user.userName}`);
         } else {
           this.markers[user.userName].setLatLng([user.lat, user.lng]);
         }
@@ -182,7 +193,7 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
     });
 
     this.markerTimer = setTimeout(() => {
-      this.updateMarkers(users);
+      this.updateMarkers(onlySelected);
     }, 5000);
   }
 

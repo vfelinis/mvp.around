@@ -5,4 +5,5 @@ export interface User {
     lng: number;
     isGeolocationAvailable: boolean;
     lastUpdate?: Date;
+    userIcon: string;
   }

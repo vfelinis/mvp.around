@@ -33,5 +33,6 @@ namespace mvp.around_webclient.Hubs
         public double Lat { get; set; }
         public double Lng { get; set; }
         public bool IsGeolocationAvailable { get; set; }
+        public string UserIcon { get; set; }
     }
 }
