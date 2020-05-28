@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "mvp.around_api.Services";
 
@@ -81,5 +82,5 @@ message GroupDto {
     string Password = 3;
     string UserName = 4;
     int32 UserRole = 5;
-    string UserIcon = 6;
+    google.protobuf.StringValue UserIcon = 6;
 }

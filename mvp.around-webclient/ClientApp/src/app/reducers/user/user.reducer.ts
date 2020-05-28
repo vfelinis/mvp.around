@@ -51,12 +51,13 @@ export const selectAll = (state: UsersState) => state.users;
 
 export const selectUsersForGroup = createSelector(
   selectAll,
-  (users: User[], props) => users.filter(s => {
-    if (s.lastUpdate === null) {
-      return false;
-    }
-    let date = new Date(s.lastUpdate);
-    date.setSeconds(date.getSeconds() + props.interval);
-    return date > new Date() && s.groupId === props.groupId;
-  })
+  (users: User[], props) => users
+    .filter(s => {
+      if (s.lastUpdate === null) {
+        return false;
+      }
+      let date = new Date(s.lastUpdate);
+      date.setSeconds(date.getSeconds() + props.interval);
+      return date > new Date() && s.groupId === props.groupId;
+    })
 );

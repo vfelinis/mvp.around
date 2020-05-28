@@ -11,11 +11,19 @@
             <mat-icon>language</mat-icon>
             Show everyone
         </button>
+        <div class="search">
+            <mat-form-field>
+                <mat-icon matPrefix>search</mat-icon>
+                <input type="text" matInput #search (keyup)="filterUsers(search.value)">
+            </mat-form-field>
+        </div>
         <mat-spinner *ngIf="!(users$ | async).length"></mat-spinner>
         <mat-list>
-            <mat-list-item *ngFor="let user of users$ | async">
+            <mat-list-item *ngFor="let user of users$ | async | usersFilter:filter">
                 <div class="user-item" fxLayout fxLayoutAlign="start center">
-                    <mat-icon>person</mat-icon> {{user.userName}}
+                    <img *ngIf="user.userIcon" src="/icons/{{user.userIcon}}.svg" alt="icon" width="24" height="24">
+                    <mat-icon *ngIf="!user.userIcon">person</mat-icon>
+                    &nbsp;{{user.userName}}
                     <div fxLayout fxFlex="grow" fxLayoutAlign="end">
                         <button [disabled]="!user.isGeolocationAvailable" mat-icon-button color="primary" (click)="onShowUserOnMap(user)">
                             <mat-icon>my_location</mat-icon>

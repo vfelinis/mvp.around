@@ -2,14 +2,18 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, OnChanges, Simpl
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+import { map } from 'rxjs/operators';
 import DG from '2gis-maps';
 import * as workerTimers from 'worker-timers';
+import 'leaflet.markercluster';
 
 import { Group } from 'src/app/models/group.model';
 import { GroupService } from 'src/app/services/groupService';
 import { User } from 'src/app/models/user.model';
 import { GeolocationService } from 'src/app/services/geolocationService';
 import { Geolocation } from 'src/app/models/geolocation.model';
+
+import { UsersFilterPipe } from 'src/app/pipes/users-filter/users-filter.pipe';
 
 @Component({
   selector: 'app-group-detail',
@@ -32,6 +36,8 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
   map: any;
   markers: any = {};
   isMapShown: boolean;
+  markersGroup: any = DG.markerClusterGroup();
+  filter: string;
 
   constructor(private groupService: GroupService, private geolocationService: GeolocationService,
      private activatedRoute: ActivatedRoute)
@@ -42,9 +48,13 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
           this.group = s;
         });
 
-      this.users$ = this.groupService.selectUsers(+activatedRoute.snapshot.params['id'], 30);
+      this.users$ = this.groupService.selectUsers(+activatedRoute.snapshot.params['id'], 30)
+        .pipe(map(s => s.sort((a, b) => a.userName < b.userName ? -1 : a.userName > b.userName ? 1 : 0)));
       this.users$.pipe(takeUntil(this.ngUnsubscribe))
         .subscribe(s => {
+          if (s.length > this.users?.length && s.length > 1) {
+            this.sendHubMessage();
+          }
           this.users = s;
         });
 
@@ -64,6 +74,7 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
       'zoom': 15,
       'fullscreenControl': false
     });
+    this.map.addLayer(this.markersGroup);
     //this.marker.addTo(this.map);
     // this.map.locate({setView: true, watch: true})
     //     .on('locationfound', (e) => {
@@ -166,11 +177,14 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
     let users = this.users.filter(x => !onlySelected || x.userName === this.selectedUser?.userName);
     let actualMarkers = users.map(u => u.userName);
     let previousMarkers = Object.keys(this.markers);
-    let markersToDelete = previousMarkers.filter(x => !actualMarkers.includes(x));
-    markersToDelete.forEach(key => {
-      this.markers[key].removeFrom(this.map);
+    let markerNamesToDelete = previousMarkers.filter(x => !actualMarkers.includes(x));
+    let markersToDelete = [];
+    markerNamesToDelete.forEach(key => {
+      markersToDelete.push(this.markers[key]);
       delete this.markers[key];
     });
+    this.markersGroup.removeLayers(markersToDelete);
+    let markersToAdd = [];
     users.forEach(user => {
       if (user.isGeolocationAvailable) {
         if (!previousMarkers.includes(user.userName)) {
@@ -185,16 +199,22 @@ export class GroupDetailComponent implements OnInit, OnDestroy, OnChanges {
             });
           }
           this.markers[user.userName] = DG.marker([user.lat, user.lng], options);
-          this.markers[user.userName].addTo(this.map).bindPopup(`Nick name: ${user.userName}`);
+          this.markers[user.userName].bindPopup(`Nick name: ${user.userName}`);
+          markersToAdd.push(this.markers[user.userName]);
         } else {
           this.markers[user.userName].setLatLng([user.lat, user.lng]);
         }
       }
     });
+    this.markersGroup.addLayers(markersToAdd);
 
     this.markerTimer = setTimeout(() => {
       this.updateMarkers(onlySelected);
     }, 5000);
+  }
+
+  filterUsers(value: string) {
+    this.filter = value;
   }
 
 }

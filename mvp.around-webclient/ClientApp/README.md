@@ -35,3 +35,4 @@ ng generate @ngrx/schematics:entity Group --reducers reducers/index.ts --flat fa
 ng generate module groups --route groups --module app.module
 ng generate @ngrx/schematics:entity Geolocation --reducers reducers/index.ts --flat false
 ng generate @ngrx/schematics:reducer User --reducers reducers/index.ts --flat false --group
+ng generate pipe UsersFilterPipe -m app.module.ts
